@@ -48,7 +48,7 @@ const NavigationBarContainer = styled.div`
   @media (max-width: 576px) {
     //mobile
     width: 330px;
-    height: 78px;
+    height: 70px;
 
     border-radius: 21px;
 

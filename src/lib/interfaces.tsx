@@ -14,3 +14,11 @@ export interface TitleContentProps {
   title: string;
   content: string;
 }
+
+export interface ImageProps {
+  imageUrl: string;
+}
+
+export interface IndexProps {
+  index: number;
+}

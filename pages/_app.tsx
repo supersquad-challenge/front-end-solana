@@ -2,9 +2,9 @@ import type { AppProps } from "next/app";
 
 import Head from "next/head";
 import { theme } from "../styles/theme";
-import PageHeaderBar from "../src/PageHeaderBar";
+import MainHeaderBar from "../src/MainHeaderBar";
 import { createGlobalStyle, ThemeProvider } from "styled-components";
-import { PageHeaderBarPlaceholder } from "../src/PlaceHolder";
+import { MainHeaderBarPlaceholder } from "../src/PlaceHolder";
 import { RecoilRoot } from "recoil";
 import NavigationBar from "../src/NavigationBar";
 import { useRouter } from "next/router";
@@ -17,12 +17,13 @@ const GlobalStyle = createGlobalStyle`
   }
 `;
 
-function CreateCosmosApp({ Component, pageProps }: AppProps) {
+function App({ Component, pageProps }: AppProps) {
   const router = useRouter();
   const { pathname } = router;
 
   const dontShowPageHeaderBarPath = [""];
   const shouldShowNavigationBarPath = ["/myChallenges/ongoing", "/"];
+  const shouldShowNavigationBarPathStartsWith = ["/home/"];
 
   return (
     <>
@@ -35,17 +36,21 @@ function CreateCosmosApp({ Component, pageProps }: AppProps) {
         <ThemeProvider theme={theme}>
           {!dontShowPageHeaderBarPath.includes(pathname) && (
             <>
-              <PageHeaderBar />
-              <PageHeaderBarPlaceholder />
+              <MainHeaderBar />
+              <MainHeaderBarPlaceholder />
             </>
           )}
 
           <Component {...pageProps} />
+          {/* <NavigationBar /> */}
           {shouldShowNavigationBarPath.includes(pathname) && <NavigationBar />}
+          {shouldShowNavigationBarPathStartsWith.some((path) => {
+            return pathname.startsWith(path);
+          }) && <NavigationBar />}
         </ThemeProvider>
       </RecoilRoot>
     </>
   );
 }
 
-export default CreateCosmosApp;
+export default App;

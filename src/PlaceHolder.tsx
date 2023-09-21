@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import React from "react";
 
-export const PageHeaderBarPlaceholder = styled.div`
+export const MainHeaderBarPlaceholder = styled.div`
   @media (max-width: 2160px) {
     //PC
     height: 96px;
@@ -12,7 +12,7 @@ export const PageHeaderBarPlaceholder = styled.div`
   }
 `;
 
-export const MyChallengesPageHeaderBarPlaceholder = styled.div`
+export const SubHeaderBarPlaceholder = styled.div`
   /* @media (max-width: 2160px) {
       //PC
     } */

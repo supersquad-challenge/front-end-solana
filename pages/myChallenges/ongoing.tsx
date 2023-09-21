@@ -3,16 +3,16 @@ import React from "react";
 
 import { useEffect, useState } from "react";
 
-import { MyChallengesPageHeaderBar } from "../../src/MyChallengsPageHeaderBar";
-import { MyChallengesPageHeaderBarPlaceholder } from "../../src/PlaceHolder";
+import SubHeaderBar from "../../src/SubHeaderBar";
+import { SubHeaderBarPlaceholder } from "../../src/PlaceHolder";
 
 import Head from "next/head";
 
 const MyChallengesOnGoing = () => {
   return (
     <>
-      <MyChallengesPageHeaderBar />
-      <MyChallengesPageHeaderBarPlaceholder />
+      <SubHeaderBar />
+      <SubHeaderBarPlaceholder />
       <Container>
         <MyChllengeWrapper>
           <MyChallengeThumbnail src="/pages/myChallenges/dietExSmall.svg" />
