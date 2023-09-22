@@ -34,7 +34,7 @@ const MainHeaderBar = () => {
   const Back_Alarm_Profile = () => {
     return (
       <Container>
-        {shouldShowProfilePath.includes(pathname) ? (
+        {shouldShowProfilePath.includes(pathname) && (
           <>
             <GoBackButton
               src="/PageHeaderBar/chevron-left.svg"
@@ -55,17 +55,21 @@ const MainHeaderBar = () => {
               alt="notification"
             />
           </>
-        ) : (
-          <>
-            <GoBackButton
-              src="/PageHeaderBar/chevron-left.svg"
-              alt="goBack"
-              onClick={() => {
-                router.push("/forDemo");
-              }}
-            />
-          </>
         )}
+      </Container>
+    );
+  };
+
+  const Back = () => {
+    return (
+      <Container>
+        <GoBackButton
+          src="/PageHeaderBar/chevron-left.svg"
+          alt="goBack"
+          onClick={() => {
+            router.push("/forDemo");
+          }}
+        />
       </Container>
     );
   };

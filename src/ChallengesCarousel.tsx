@@ -2,14 +2,36 @@ import React, { ReactElement } from "react";
 import Carousel from "react-material-ui-carousel";
 import styled from "styled-components";
 import { colors } from "./lib/colors";
-import { ImageProps, IndexProps } from "./lib/interfaces";
+import { ImageProps, IndexProps, OnClickProps } from "./lib/interfaces";
+import { useRouter } from "next/router";
 
 const ChallengesCarousel: React.FC = () => {
+  const router = useRouter();
   const items: ReactElement[] = [
-    <Challenge key={1} />,
-    <Challenge key={2} />,
-    <Challenge key={3} />,
-    <Challenge key={4} />,
+    <Challenge
+      onClick={() => {
+        router.push("/challenges/diet");
+      }}
+      key={1}
+    />,
+    <Challenge
+      onClick={() => {
+        router.push("/challenges/diet");
+      }}
+      key={2}
+    />,
+    <Challenge
+      onClick={() => {
+        router.push("/challenges/diet");
+      }}
+      key={3}
+    />,
+    <Challenge
+      onClick={() => {
+        router.push("/challenges/diet");
+      }}
+      key={4}
+    />,
   ];
 
   return (
@@ -62,9 +84,9 @@ const Item: React.FC<ItemProps> = ({ chunk }) => {
   );
 };
 
-const Challenge = () => {
+const Challenge = ({ onClick }: OnClickProps) => {
   return (
-    <ChallengeWrapper>
+    <ChallengeWrapper onClick={onClick}>
       <ChallengeThumbnail imageUrl="/pages/home/dietThumbnail.svg" />
       <ChallengeTitle>Lose 4lbs</ChallengeTitle>
       <ChallengePeriod>Sep 11st - Oct 11st</ChallengePeriod>

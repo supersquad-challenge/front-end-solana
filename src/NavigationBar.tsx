@@ -3,18 +3,21 @@
 import styled from "styled-components";
 import React from "react";
 import { useRouter } from "next/router";
+import { IsClickedProps } from "./lib/interfaces";
 
 const NavigationBar = () => {
+  const router = useRouter();
+  const { pathname } = router;
   return (
     <Container>
       <NavigationBarContainer>
-        <NavigationBarWrapper>
+        <NavigationBarWrapper isClicked={pathname.startsWith("/home")}>
           <img src="/NavigationBar/home.svg" alt="home" />
         </NavigationBarWrapper>
-        <NavigationBarWrapper style={{ borderBottom: "3px solid white" }}>
+        <NavigationBarWrapper isClicked={pathname.startsWith("/myChallenges")}>
           <img src="/NavigationBar/clock.svg" alt="time" />
         </NavigationBarWrapper>
-        <NavigationBarWrapper>
+        <NavigationBarWrapper isClicked={false}>
           <img src="/NavigationBar/profile.svg" alt="profile" />
         </NavigationBarWrapper>
       </NavigationBarContainer>
@@ -64,7 +67,7 @@ const NavigationBarContainer = styled.div`
   background-color: #121212;
 `;
 
-const NavigationBarWrapper = styled.div`
+const NavigationBarWrapper = styled.div<IsClickedProps>`
   @media (max-width: 2160px) {
     //PC
   }
@@ -72,14 +75,15 @@ const NavigationBarWrapper = styled.div`
     //mobile
     width: fit-content;
     height: 40px;
+    border-bottom: ${(props) => props.isClicked && "3px solid white"};
+
+    & > img {
+      width: 23px;
+      height: 23px;
+    }
   }
 
   color: white;
-
-  & > img {
-    width: 23px;
-    height: 23px;
-  }
 
   box-sizing: border-box;
 `;

@@ -22,3 +22,7 @@ export interface ImageProps {
 export interface IndexProps {
   index: number;
 }
+
+export interface OnClickProps {
+  onClick: any;
+}

@@ -8,7 +8,9 @@ import {
   IsOpenProps,
   BackgroundColorProps,
   TitleContentProps,
+  IndexProps,
 } from "../../src/lib/interfaces";
+import { colors } from "../../src/lib/colors";
 
 const ChallengesDiet = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -28,22 +30,45 @@ const ChallengesDiet = () => {
         src="/pages/challenges/diet/miracleMorningEx.svg"
         alt="miracleMorningChallengeThumbnail"
       />
+      <TagsContainer>
+        <TagWrapper backgroundColor="#ECECEC">Everyday</TagWrapper>
+        <TagWrapper backgroundColor="#D6C0F0">1 Month</TagWrapper>
+      </TagsContainer>
       {isModalOpen == false && (
         <>
           <ChallengeContainer>
-            <TagsContainer>
-              <TagWrapper backgroundColor="#ECECEC">Everyday</TagWrapper>
-              <TagWrapper backgroundColor="#D6C0F0">1 Month</TagWrapper>
-            </TagsContainer>
             <ChallengeTitle>Lose 6lbs</ChallengeTitle>
+            <div
+              style={{
+                marginTop: "5px",
+                width: "345px",
+                display: "flex",
+              }}
+            >
+              <ChallengeParticipants>30 Paticipants</ChallengeParticipants>
+              <ChallengeTotalDeposit>$,3800</ChallengeTotalDeposit>
+            </div>
             <ChallengeInfoContainer>
               <ChallengeInfo
+                index={1}
+                title="Schedule"
+                content={"Sep 11st -\nOct 11st"}
+              />
+              <ChallengeInfo
+                index={2}
+                title="How To"
+                content="Take a picture"
+              />
+
+              <ChallengeInfo index={3} title="Complete" content="Everyday" />
+              <ChallengeInfo index={4} title="CryptoYield+" content="+1.86%" />
+              {/* <ChallengeInfo
                 title="Schedule"
                 content="September 11st - October 11st"
               />
               <ChallengeInfo title="Prove" content="Everyday" />
               <ChallengeInfo title="How To" content="Snap your scale" />
-              <ChallengeInfo title="Estimated Yield" content="6.86%" />
+              <ChallengeInfo title="Estimated Yield" content="6.86%" /> */}
             </ChallengeInfoContainer>
           </ChallengeContainer>
           <BlackFixedButton onClick={handleIAmInButtonClick}>
@@ -113,35 +138,15 @@ const ChallengesDiet = () => {
 
 export default ChallengesDiet;
 
-const ChallengeInfo = ({ title, content }: TitleContentProps) => {
+interface IndexTitleContentProps extends IndexProps, TitleContentProps {}
+
+const ChallengeInfo = ({ index, title, content }: IndexTitleContentProps) => {
   return (
-    <ChallengeInfoWrapper>
-      <img
-        src="/pages/challenges/diet/checkmark.svg"
-        width={20}
-        height={20}
-        style={{ left: 24, position: "absolute" }}
-      />
-      <div
-        style={{
-          left: 54,
-          fontSize: 14,
-          fontWeight: 500,
-          position: "absolute",
-        }}
-      >
-        {title}
-      </div>
-      <div
-        style={{
-          right: 24,
-          fontSize: 14,
-          fontWeight: 400,
-          position: "absolute",
-        }}
-      >
+    <ChallengeInfoWrapper index={index}>
+      <ChallengeInfoTitle>{title}</ChallengeInfoTitle>
+      <ChallengeInfoContent style={{ whiteSpace: "pre-line" }} index={index}>
         {content}
-      </div>
+      </ChallengeInfoContent>
     </ChallengeInfoWrapper>
   );
 };
@@ -182,7 +187,7 @@ const ChallengeContainer = styled.div`
   } */
   @media (max-width: 576px) {
     //mobile
-    height: 430px;
+    height: 380px;
 
     background-color: white;
 
@@ -195,6 +200,7 @@ const ChallengeContainer = styled.div`
 
   display: flex;
   flex-direction: column;
+  align-items: center;
 `;
 
 const TagsContainer = styled.div`
@@ -203,12 +209,15 @@ const TagsContainer = styled.div`
   } */
   @media (max-width: 576px) {
     //mobile
+    width: 345px;
     height: 27px;
     margin-top: 20px;
-    padding-left: 24px;
+    top: 230px;
   }
+  position: absolute;
   width: 100%;
   display: flex;
+  z-index: 1;
 
   /* box-sizing: content-box;
   background-color: red;
@@ -251,18 +260,42 @@ const ChallengeTitle = styled.div`
   @media (max-width: 576px) {
     //mobile
     font-size: 24px;
-    text-align: center;
+    font-weight: 600;
 
-    margin-left: 24px;
-    margin-top: 10px;
+    width: 345px;
+
+    margin-top: 20px;
   }
-  display: flex;
-  justify-content: center;
-  align-items: center;
 
   width: fit-content;
 
   /* border: 1px solid black;
+  box-sizing: border-box; */
+`;
+
+const ChallengeParticipants = styled.div`
+  /* @media (max-width: 2160px) {
+    //PC
+  } */
+  @media (max-width: 576px) {
+    font-size: 14px;
+    padding-right: 12px;
+  }
+  //border-right 설정해야 함.
+  border-right: 1px solid black;
+  /* border: 1px solid green;
+  box-sizing: border-box; */
+`;
+
+const ChallengeTotalDeposit = styled.div`
+  /* @media (max-width: 2160px) {
+    //PC
+  } */
+  @media (max-width: 576px) {
+    font-size: 14px;
+    margin-left: 12px;
+  }
+  /* border: 1px solid green;
   box-sizing: border-box; */
 `;
 
@@ -272,38 +305,70 @@ const ChallengeInfoContainer = styled.div`
   } */
   @media (max-width: 576px) {
     margin-top: 20px;
+    height: 200px;
+    width: 330px;
   }
+  position: relative;
 
-  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
 
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-
-  background-color: white;
-
+  background-color: ${colors.paleGray};
   /* border: 1px solid black;
   box-sizing: border-box; */
 `;
 
-const ChallengeInfoWrapper = styled.div`
+const ChallengeInfoWrapper = styled.div<IndexProps>`
   /* @media (max-width: 2160px) {
-    //PC
   } */
   @media (max-width: 576px) {
-    width: 345px;
-    height: 50px;
+    width: 160px;
+    height: 95px;
 
     border-radius: 20px;
-
-    margin-bottom: 14px;
   }
+  left: ${(props) => [1, 3].includes(props.index) && "0px"};
+  right: ${(props) => [2, 4].includes(props.index) && "0px"};
+  top: ${(props) => [1, 2].includes(props.index) && "0px"};
+  bottom: ${(props) => [3, 4].includes(props.index) && "0px"};
 
-  position: relative;
-  display: flex;
-  align-items: center;
+  position: absolute;
 
-  background-color: #f6f6f6;
+  background-color: white;
+`;
+
+const ChallengeInfoTitle = styled.div`
+  /* @media (max-width: 2160px) {
+  } */
+  @media (max-width: 576px) {
+    font-size: 14px;
+    font-weight: 400;
+    margin-left: 16px;
+    margin-top: 12px;
+  }
+  width: fit-content;
+  color: black;
+
+  /* border: 1px solid green;
+  box-sizing: border-box; */
+`;
+
+const ChallengeInfoContent = styled.div<IndexProps>`
+  /* @media (max-width: 2160px) {
+  } */
+  @media (max-width: 576px) {
+    font-size: 18px;
+    font-weight: 600;
+    margin-left: 16px;
+    margin-top: 10px;
+  }
+  width: fit-content;
+  color: ${(props) =>
+    props.index == 4 ? `${colors.darkPurple}` : `${colors.black}`};
+
+  /* border: 1px solid green;
+  box-sizing: border-box; */
 `;
 
 const BlackFixedButton = styled.div`
