@@ -21,9 +21,15 @@ function App({ Component, pageProps }: AppProps) {
   const router = useRouter();
   const { pathname } = router;
 
-  const dontShowPageHeaderBarPath = [""];
-  const shouldShowNavigationBarPath = ["/myChallenges/ongoing", "/"];
-  const shouldShowNavigationBarPathStartsWith = ["/home/", "/myChallenges/"];
+  const dontShowPageHeaderBarPath = [
+    "/myChallenges/onApplication/diet",
+    "/myChallenges/ongoing/diet",
+  ];
+  const shouldShowNavigationBarPath = [
+    "/myChallenges/ongoing",
+    "/myChallenges/onApplication",
+  ];
+  const shouldShowNavigationBarPathStartsWith = ["/home/"];
 
   return (
     <>

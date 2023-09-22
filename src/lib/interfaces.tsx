@@ -26,3 +26,7 @@ export interface IndexProps {
 export interface OnClickProps {
   onClick: any;
 }
+
+export interface HeightTypeProps {
+  heightType: string;
+}

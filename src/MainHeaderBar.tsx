@@ -11,7 +11,8 @@ const shouldShowProfilePath = [
 ];
 
 const shouldShowHeaderTitlePath: { [key: string]: string } = {
-  "/myChallenges/": "My Challenges",
+  "/myChallenges/ongoing": "My Challenges",
+  "/myChallenges/onApplication": "My Challenges",
 };
 
 const MainHeaderBar = () => {
@@ -80,12 +81,18 @@ const MainHeaderBar = () => {
       </Container>
     );
   };
-  //조건 때문에 주석은 남겨둠
   const NaviBarName_SignIn = () => {
     let title = null;
 
+    // Object.keys(shouldShowHeaderTitlePath).some((key) => {
+    //   if (pathname.startsWith(key)) {
+    //     title = shouldShowHeaderTitlePath[key];
+    //     return true; // 종료 조건
+    //   }
+    //   return false; // 계속 진행
+    // });
     Object.keys(shouldShowHeaderTitlePath).some((key) => {
-      if (pathname.startsWith(key)) {
+      if (pathname == key) {
         title = shouldShowHeaderTitlePath[key];
         return true; // 종료 조건
       }

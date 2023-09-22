@@ -12,6 +12,7 @@ import ChallengeInfoModal from "../../src/page/challenges/ChallengeInfoModal";
 import PaymentMethodModal from "../../src/page/challenges/PaymentMethodModal";
 import { useRecoilValue } from "recoil";
 import { paymentMethodState } from "../../src/lib/states";
+import ChallengeInfoTable from "../../src/ChallengeInfoTable";
 
 //PaymentMethodModal => ChallengeInfoModal
 
@@ -60,21 +61,7 @@ const ChallengesDiet = () => {
               <ChallengeParticipants>30 Paticipants</ChallengeParticipants>
               <ChallengeTotalDeposit>$3,800</ChallengeTotalDeposit>
             </div>
-            <ChallengeInfoContainer>
-              <ChallengeInfo
-                index={1}
-                title="Schedule"
-                content={"Sep 11st -\nOct 11st"}
-              />
-              <ChallengeInfo
-                index={2}
-                title="How To"
-                content="Take a picture"
-              />
-
-              <ChallengeInfo index={3} title="Complete" content="Everyday" />
-              <ChallengeInfo index={4} title="CryptoYield+" content="+1.86%" />
-            </ChallengeInfoContainer>
+            <ChallengeInfoTable />
           </ChallengeContainer>
           <BlackFixedButton onClick={handleIAmInButtonClick}>
             I am in!
@@ -97,18 +84,18 @@ const ChallengesDiet = () => {
 
 export default ChallengesDiet;
 
-interface IndexTitleContentProps extends IndexProps, TitleContentProps {}
+// interface IndexTitleContentProps extends IndexProps, TitleContentProps {}
 
-const ChallengeInfo = ({ index, title, content }: IndexTitleContentProps) => {
-  return (
-    <ChallengeInfoWrapper index={index}>
-      <ChallengeInfoTitle>{title}</ChallengeInfoTitle>
-      <ChallengeInfoContent style={{ whiteSpace: "pre-line" }} index={index}>
-        {content}
-      </ChallengeInfoContent>
-    </ChallengeInfoWrapper>
-  );
-};
+// const ChallengeInfo = ({ index, title, content }: IndexTitleContentProps) => {
+//   return (
+//     <ChallengeInfoWrapper index={index}>
+//       <ChallengeInfoTitle>{title}</ChallengeInfoTitle>
+//       <ChallengeInfoContent style={{ whiteSpace: "pre-line" }} index={index}>
+//         {content}
+//       </ChallengeInfoContent>
+//     </ChallengeInfoWrapper>
+//   );
+// };
 
 const Container = styled.div`
   /* @media (max-width: 2160px) {
@@ -251,78 +238,6 @@ const ChallengeTotalDeposit = styled.div`
     font-size: 14px;
     margin-left: 12px;
   }
-  /* border: 1px solid green;
-  box-sizing: border-box; */
-`;
-
-const ChallengeInfoContainer = styled.div`
-  /* @media (max-width: 2160px) {
-    //PC
-  } */
-  @media (max-width: 576px) {
-    margin-top: 20px;
-    height: 200px;
-    width: 330px;
-  }
-  position: relative;
-
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: 1fr 1fr;
-
-  background-color: ${colors.paleGray};
-  /* border: 1px solid black;
-  box-sizing: border-box; */
-`;
-
-const ChallengeInfoWrapper = styled.div<IndexProps>`
-  /* @media (max-width: 2160px) {
-  } */
-  @media (max-width: 576px) {
-    width: 160px;
-    height: 95px;
-
-    border-radius: 20px;
-  }
-  left: ${(props) => [1, 3].includes(props.index) && "0px"};
-  right: ${(props) => [2, 4].includes(props.index) && "0px"};
-  top: ${(props) => [1, 2].includes(props.index) && "0px"};
-  bottom: ${(props) => [3, 4].includes(props.index) && "0px"};
-
-  position: absolute;
-
-  background-color: white;
-`;
-
-const ChallengeInfoTitle = styled.div`
-  /* @media (max-width: 2160px) {
-  } */
-  @media (max-width: 576px) {
-    font-size: 14px;
-    font-weight: 400;
-    margin-left: 16px;
-    margin-top: 12px;
-  }
-  width: fit-content;
-  color: black;
-
-  /* border: 1px solid green;
-  box-sizing: border-box; */
-`;
-
-const ChallengeInfoContent = styled.div<IndexProps>`
-  /* @media (max-width: 2160px) {
-  } */
-  @media (max-width: 576px) {
-    font-size: 18px;
-    font-weight: 600;
-    margin-left: 16px;
-    margin-top: 10px;
-  }
-  width: fit-content;
-  color: ${(props) =>
-    props.index == 4 ? `${colors.darkPurple}` : `${colors.black}`};
-
   /* border: 1px solid green;
   box-sizing: border-box; */
 `;
