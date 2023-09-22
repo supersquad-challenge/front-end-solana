@@ -3,20 +3,27 @@ import React from "react";
 import { useRouter } from "next/router";
 import { colors } from "./lib/colors";
 
+const shouldShowProfilePath = [
+  "/challenges/diet",
+  "/",
+  "/myChallenges/ongoing",
+  "/forDemo",
+];
+
+const shouldShowHeaderTitlePath: { [key: string]: string } = {
+  "/myChallenges/": "My Challenges",
+};
+
 const MainHeaderBar = () => {
   const router = useRouter();
   const { pathname } = router;
-
-  const shouldShowProfilePath = [
-    "/challenges/diet",
-    "/",
-    "/myChallenges/ongoing",
-    "/forDemo",
-  ];
-
-  const shouldShowHeaderTitlePath: { [key: string]: string } = {
-    "/myChallenges/ongoing": "My Challenges",
-  };
+  // console.log(pathname);
+  // // Object.keys(shouldShowHeaderTitlePath).some((key) => {
+  // //   if (pathname.startsWith(key)) {
+  // //     console.log(shouldShowHeaderTitlePath[key]);
+  // //   }
+  // //   return pathname.startsWith(key);
+  // // });
 
   /////상황별로 다르게 쓸 수 있음. /////
 
@@ -73,10 +80,35 @@ const MainHeaderBar = () => {
       </Container>
     );
   };
+  //조건 때문에 주석은 남겨둠
+  const NaviBarName_SignIn = () => {
+    let title = null;
+
+    Object.keys(shouldShowHeaderTitlePath).some((key) => {
+      if (pathname.startsWith(key)) {
+        title = shouldShowHeaderTitlePath[key];
+        return true; // 종료 조건
+      }
+      return false; // 계속 진행
+    });
+
+    return (
+      <Container>
+        {title && <PageHeaderTitle>{title}</PageHeaderTitle>}
+        <ProfileImage src="/PageHeaderBar/profileEx.svg" alt="profileEx" />
+        <NotificationButton
+          src="/PageHeaderBar/notification.svg"
+          alt="notification"
+        />
+      </Container>
+    );
+  };
 
   return (
     // <Back_Alarm_Profile />
-    <Logo_SignIn />
+    // <Logo_SignIn />
+    // <Back />
+    <NaviBarName_SignIn />
   );
 };
 
@@ -213,7 +245,7 @@ const PageHeaderTitle = styled.div`
   } */
   @media (max-width: 576px) {
     //mobile
-    left: 60px;
+    left: 30px;
     font-size: 24px;
     font-weight: 500;
   }

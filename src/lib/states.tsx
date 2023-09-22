@@ -10,7 +10,17 @@ export const depositAmountState = atom<number>({
   default: 0,
 });
 
-export const isSignedIn = atom<boolean>({
-  key: "IsSignedIn",
+export const paymentMethodState = atom<string>({
+  key: "PaymentMethodState",
+  default: "",
+});
+
+export const isSignedInState = atom<boolean>({
+  key: "IsSignedInState",
+  default: false,
+});
+
+export const isPaidWithCrpytoState = atom<boolean>({
+  key: "IsPaidWithCrpytoState",
   default: false,
 });

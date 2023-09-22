@@ -35,20 +35,20 @@ const SubHeaderBar = () => {
     return (
       <SubHeaderBarContainer>
         <SubHeaderBarWrapper
+          isClicked={pathname === "/myChallenges/onApplication"}
+          onClick={() => {
+            router.push("/myChallenges/onApplication");
+          }}
+        >
+          On Application (14)
+        </SubHeaderBarWrapper>
+        <SubHeaderBarWrapper
           isClicked={pathname === "/myChallenges/ongoing"}
           onClick={() => {
             router.push("/myChallenges/ongoing");
           }}
         >
           Ongoing (1)
-        </SubHeaderBarWrapper>
-        <SubHeaderBarWrapper
-          isClicked={pathname === "/myChallenges/completed"}
-          onClick={() => {
-            router.push("/myChallenges/completed");
-          }}
-        >
-          Completed (14)
         </SubHeaderBarWrapper>
       </SubHeaderBarContainer>
     );
@@ -57,7 +57,7 @@ const SubHeaderBar = () => {
   return (
     <>
       {pathname.startsWith("/home/") && <OnApplication_Ongoing />}
-      {pathname.startsWith("/myChalleges/") && <MyChallengesPageHeaderBar />}
+      {pathname.startsWith("/myChallenges/") && <MyChallengesPageHeaderBar />}
     </>
   );
 };

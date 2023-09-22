@@ -11,10 +11,20 @@ const NavigationBar = () => {
   return (
     <Container>
       <NavigationBarContainer>
-        <NavigationBarWrapper isClicked={pathname.startsWith("/home")}>
+        <NavigationBarWrapper
+          isClicked={pathname.startsWith("/home")}
+          onClick={() => {
+            router.push("/home");
+          }}
+        >
           <img src="/NavigationBar/home.svg" alt="home" />
         </NavigationBarWrapper>
-        <NavigationBarWrapper isClicked={pathname.startsWith("/myChallenges")}>
+        <NavigationBarWrapper
+          isClicked={pathname.startsWith("/myChallenges")}
+          onClick={() => {
+            router.push("/myChallenges");
+          }}
+        >
           <img src="/NavigationBar/clock.svg" alt="time" />
         </NavigationBarWrapper>
         <NavigationBarWrapper isClicked={false}>

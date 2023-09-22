@@ -8,7 +8,7 @@ import { SubHeaderBarPlaceholder } from "../../src/PlaceHolder";
 
 import Head from "next/head";
 
-const MyChallengesOnGoing = () => {
+const MyChallengesFinished = () => {
   return (
     <>
       <Head>
@@ -54,7 +54,7 @@ const MyChallengesOnGoing = () => {
   );
 };
 
-export default MyChallengesOnGoing;
+export default MyChallengesFinished;
 
 const Container = styled.div`
   /* @media (max-width: 2160px) {

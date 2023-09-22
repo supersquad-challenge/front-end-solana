@@ -14,6 +14,11 @@ const nextConfig = {
         destination: "/home/onApplication",
         permanent: false,
       },
+      {
+        source: "/myChallenges",
+        destination: "/myChallenges/ongoing",
+        permanent: false,
+      },
     ];
   },
 };

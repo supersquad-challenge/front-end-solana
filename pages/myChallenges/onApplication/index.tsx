@@ -3,12 +3,12 @@ import React from "react";
 
 import { useEffect, useState } from "react";
 
-import SubHeaderBar from "../../src/SubHeaderBar";
-import { SubHeaderBarPlaceholder } from "../../src/PlaceHolder";
+import SubHeaderBar from "../../../src/SubHeaderBar";
+import { SubHeaderBarPlaceholder } from "../../../src/PlaceHolder";
 
 import Head from "next/head";
 
-const MyChallengesOnGoing = () => {
+const MyChallengesOnApplication = () => {
   return (
     <>
       <Head>
@@ -54,7 +54,7 @@ const MyChallengesOnGoing = () => {
   );
 };
 
-export default MyChallengesOnGoing;
+export default MyChallengesOnApplication;
 
 const Container = styled.div`
   /* @media (max-width: 2160px) {
