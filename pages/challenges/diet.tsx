@@ -1,29 +1,41 @@
 import styled from "styled-components";
 import React, { useState } from "react";
-import { useRecoilState } from "recoil";
-import { depositAmountState } from "../../src/lib/states";
-import DepositSlider from "../../src/DepositSlider";
-
 import {
   IsOpenProps,
   BackgroundColorProps,
   TitleContentProps,
   IndexProps,
+  IsClickedProps,
 } from "../../src/lib/interfaces";
 import { colors } from "../../src/lib/colors";
+import ChallengeInfoModal from "../../src/page/challenges/ChallengeInfoModal";
+import PaymentMethodModal from "../../src/page/challenges/PaymentMethodModal";
+import { useRecoilValue } from "recoil";
+import { paymentMethodState } from "../../src/lib/states";
+
+//PaymentMethodModal => ChallengeInfoModal
 
 const ChallengesDiet = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isChallengeInfoModalOpen, setIsChallengeInfoModalOpen] =
+    useState(false);
 
   const handleIAmInButtonClick = () => {
-    setIsModalOpen(true);
+    // setIsChallengeInfoModalOpen(true);
+    setIsPaymentMethodModalOpen(true);
+  };
+  let paymentMethod = useRecoilValue(paymentMethodState);
+
+  //paymentMethodModal
+  const [isPaymentMethodModalOpen, setIsPaymentMethodModalOpen] =
+    useState(false);
+
+  const handleGoOnButtonClick = () => {
+    if (paymentMethod !== "") {
+      setIsPaymentMethodModalOpen(false);
+      setIsChallengeInfoModalOpen(true);
+    }
   };
 
-  const handleXButtonClick = () => {
-    setIsModalOpen(false);
-  };
-  const [deposit, setDeposit] = useRecoilState(depositAmountState);
-  const calculatedDeposit = deposit * 10 ** 6;
   return (
     <Container>
       <ChallengeThumbnailImage
@@ -34,7 +46,7 @@ const ChallengesDiet = () => {
         <TagWrapper backgroundColor="#ECECEC">Everyday</TagWrapper>
         <TagWrapper backgroundColor="#D6C0F0">1 Month</TagWrapper>
       </TagsContainer>
-      {isModalOpen == false && (
+      {isChallengeInfoModalOpen == false && (
         <>
           <ChallengeContainer>
             <ChallengeTitle>Lose 6lbs</ChallengeTitle>
@@ -46,7 +58,7 @@ const ChallengesDiet = () => {
               }}
             >
               <ChallengeParticipants>30 Paticipants</ChallengeParticipants>
-              <ChallengeTotalDeposit>$,3800</ChallengeTotalDeposit>
+              <ChallengeTotalDeposit>$3,800</ChallengeTotalDeposit>
             </div>
             <ChallengeInfoContainer>
               <ChallengeInfo
@@ -62,13 +74,6 @@ const ChallengesDiet = () => {
 
               <ChallengeInfo index={3} title="Complete" content="Everyday" />
               <ChallengeInfo index={4} title="CryptoYield+" content="+1.86%" />
-              {/* <ChallengeInfo
-                title="Schedule"
-                content="September 11st - October 11st"
-              />
-              <ChallengeInfo title="Prove" content="Everyday" />
-              <ChallengeInfo title="How To" content="Snap your scale" />
-              <ChallengeInfo title="Estimated Yield" content="6.86%" /> */}
             </ChallengeInfoContainer>
           </ChallengeContainer>
           <BlackFixedButton onClick={handleIAmInButtonClick}>
@@ -76,62 +81,16 @@ const ChallengesDiet = () => {
           </BlackFixedButton>
         </>
       )}
+      <PaymentMethodModal
+        isPaymentMethodModalOpen={isPaymentMethodModalOpen}
+        setIsPaymentMethodModalOpen={setIsPaymentMethodModalOpen}
+        handleGoOnButtonClick={handleGoOnButtonClick}
+      />
 
-      <Modal isOpen={isModalOpen}>
-        <img
-          src="/pages/challenges/diet/x.svg"
-          width={24}
-          height={24}
-          style={{ left: 24, top: 24, position: "absolute" }}
-          onClick={handleXButtonClick}
-        />
-        <div
-          style={{
-            fontSize: 24,
-            fontWeight: 700,
-            textAlign: "center",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-
-            marginTop: 44.5,
-
-            height: 44.5,
-          }}
-        >
-          Win Your Goal
-        </div>
-        <ModalChallengeInfoContainer>
-          <ModalChallengeInfoWrapper>
-            <div>Period</div>
-            <div style={{ fontWeight: 700 }}>Sep 11st - Oct 11st</div>
-          </ModalChallengeInfoWrapper>
-          <ModalChallengeInfoWrapper>
-            <div>Frequency</div>
-            <div style={{ fontWeight: 700 }}>Everyday</div>
-          </ModalChallengeInfoWrapper>
-          <ModalChallengeInfoWrapper style={{ marginBottom: 0 }}>
-            <div>Deposit</div>
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <div style={{ fontWeight: 700, marginRight: 15 }}>0</div>
-              <DepositSlider />
-              <div style={{ fontWeight: 700, marginLeft: 15 }}>200</div>
-            </div>
-          </ModalChallengeInfoWrapper>
-        </ModalChallengeInfoContainer>
-        <DepositWrapper>${deposit} OSMO</DepositWrapper>
-        <UserAverageWrapper>
-          Members deposit &nbsp;<OrangeText>100 OSMO</OrangeText>&nbsp;/ 3 week
-          in average
-        </UserAverageWrapper>
-        <BlackFixedButton>Charge Deposit</BlackFixedButton>
-      </Modal>
+      <ChallengeInfoModal
+        isChallengeInfoModalOpen={isChallengeInfoModalOpen}
+        setIsChallengeInfoModalOpen={setIsChallengeInfoModalOpen}
+      />
     </Container>
   );
 };
@@ -150,9 +109,6 @@ const ChallengeInfo = ({ index, title, content }: IndexTitleContentProps) => {
     </ChallengeInfoWrapper>
   );
 };
-interface DepositSliderProps {
-  setDeposit: any;
-}
 
 const Container = styled.div`
   /* @media (max-width: 2160px) {
@@ -499,4 +455,74 @@ const UserAverageWrapper = styled.div`
 
 const OrangeText = styled.span`
   color: #eb4826;
+`;
+
+const ModalPaymentMethodContainer = styled.div`
+  /* @media (max-width: 2160px) {
+    //PC
+  } */
+  @media (max-width: 576px) {
+    margin-top: 20px;
+    width: 343px;
+  }
+
+  /* border: 1px solid black;
+  box-sizing: border-box; */
+`;
+
+const ModalPaymentMethodWrapper = styled.div`
+  /* @media (max-width: 2160px) {
+    //PC
+  } */
+  @media (max-width: 576px) {
+    height: 56px;
+  }
+  width: 100%;
+  display: flex;
+
+  /* border: 1px solid black;
+  box-sizing: border-box; */
+`;
+
+const CheckButton = styled.div<IsClickedProps>`
+  /* @media (max-width: 2160px) {
+    //PC
+  } */
+  @media (max-width: 576px) {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+  }
+  z-index: 201;
+  background-color: ${(props) =>
+    props.isClicked ? `${colors.lightPurple}` : "white"};
+
+  border: ${(props) => !props.isClicked && `${colors.lightGray}`};
+  box-sizing: border-box;
+`;
+
+const PaymentMethod = styled.div`
+  /* @media (max-width: 2160px) {
+    //PC
+  } */
+  @media (max-width: 576px) {
+    margin-top: 3px;
+    font-size: 18px;
+    font-weight: 500;
+  }
+  /* border: 1px solid green;
+  box-sizing: border-box; */
+`;
+
+const PaymentMethodDetail = styled.div`
+  /* @media (max-width: 2160px) {
+    //PC
+  } */
+  @media (max-width: 576px) {
+    font-size: 14px;
+    font-weight: 400;
+    margin-top: 10px;
+  }
+  /* border: 1px solid green;
+  box-sizing: border-box; */
 `;
