@@ -1,7 +1,7 @@
 import { atom, RecoilState } from "recoil";
 
-export const upLoadImageBoolState = atom<boolean>({
-  key: "UpLoadImageBoolState",
+export const isImageUploadedState = atom<boolean>({
+  key: "IsImageUploadedState",
   default: false,
 });
 

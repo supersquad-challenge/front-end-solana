@@ -11,11 +11,18 @@ import {
 
 import { colors } from "../../../src/lib/colors";
 import ChallengeInfoTable from "../../../src/ChallengeInfoTable";
+import { useRecoilState } from "recoil";
+import { isImageUploadedState } from "../../../src/lib/states";
+import { useRouter } from "next/router";
 
 const SUCCESS_RATE = 40;
 
-const IndividualMyChallengeOnApplication = () => {
+const IndividualMyChallengeOngoing = () => {
   const [selectedMiddleBar, setSelctedMiddleBar] = useState("My");
+  const [isImageUploaded, setIsImageUploaded] =
+    useRecoilState(isImageUploadedState);
+
+  const router = useRouter();
 
   return (
     <Container heightType={selectedMiddleBar}>
@@ -69,12 +76,18 @@ const IndividualMyChallengeOnApplication = () => {
         {selectedMiddleBar == "Total" && <Total />}
         {selectedMiddleBar == "About" && <About />}
       </ChallengeContainer>
-      <GrayFixedButton>Starting Soon</GrayFixedButton>
+      {isImageUploaded ? (
+        <GrayFixedButton>Mission Completed</GrayFixedButton>
+      ) : (
+        <BlackFixedButton onClick={() => router.push("/proove/diet")}>
+          Complete Mission
+        </BlackFixedButton>
+      )}
     </Container>
   );
 };
 
-export default IndividualMyChallengeOnApplication;
+export default IndividualMyChallengeOngoing;
 
 const My = () => {
   return (
@@ -297,6 +310,38 @@ const ChallengeTotalDeposit = styled.div`
   box-sizing: border-box; */
 `;
 
+const BlackFixedButton = styled.div`
+  /* @media (max-width: 2160px) {
+    //PC
+  } */
+  @media (max-width: 576px) {
+    width: 343px;
+    height: 60px;
+
+    border-radius: 20px;
+
+    margin-bottom: 14px;
+  }
+
+  position: fixed;
+  bottom: 0px;
+
+  background-color: ${colors.black};
+  &:hover {
+    background-color: #3a3a3a;
+  }
+
+  color: white;
+
+  font-weight: 500;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  text-align: center;
+`;
+
 const GrayFixedButton = styled.div`
   /* @media (max-width: 2160px) {
     //PC
@@ -314,9 +359,6 @@ const GrayFixedButton = styled.div`
   bottom: 0px;
 
   background-color: #dadada;
-  &:hover {
-    /* background-color: #3a3a3a; */
-  }
 
   color: ${colors.black};
 

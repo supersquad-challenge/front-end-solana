@@ -2,15 +2,18 @@ import styled from "styled-components";
 import React, { useState } from "react";
 import UploadedImage from "../../src/UploadedImage";
 import { useRecoilState } from "recoil";
-import { upLoadImageBoolState } from "../../src/lib/states";
+import { isImageUploadedState } from "../../src/lib/states";
+import { useRouter } from "next/router";
 
 const ProoveDiet = () => {
-  const [upLoadImageBool, setUpLoadImageBool] =
-    useRecoilState(upLoadImageBoolState);
+  const [isImageUploaded, setIsImageUploaded] =
+    useRecoilState(isImageUploadedState);
+
+  const router = useRouter();
   return (
     <Container>
       <CheckImage src="/pages/proove/diet/purpleCheck.svg" alt="prooveCheck" />
-      {upLoadImageBool == false ? (
+      {isImageUploaded == false ? (
         <>
           <ProoveTitle>Snap Your Scale</ProoveTitle>
           <ProoveDetail>
@@ -23,7 +26,13 @@ const ProoveDiet = () => {
         <>
           <ProoveTitle>Congrats</ProoveTitle>
           <ProoveDetail>You have completed today&apos;s challenge</ProoveDetail>
-          <BlackButton style={{ marginTop: "30px" }}>
+          <BlackButton
+            onClick={() => {
+              setIsImageUploaded(true);
+              router.push("/myChallenges/ongoing/diet");
+            }}
+            style={{ marginTop: "30px" }}
+          >
             Check Your Status
           </BlackButton>
         </>

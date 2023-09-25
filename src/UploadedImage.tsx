@@ -3,13 +3,13 @@ import { useState } from "react";
 import { useRef } from "react";
 import { styled } from "styled-components";
 import { useRecoilState } from "recoil";
-import { upLoadImageBoolState } from "./lib/states";
+import { isImageUploadedState } from "./lib/states";
 
 const UploadedImage = () => {
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const [upLoadImageBool, setUpLoadImageBool] =
-    useRecoilState(upLoadImageBoolState);
+  const [isImageUploaded, setIsImageUploaded] =
+    useRecoilState(isImageUploadedState);
 
   const handleClick = () => {
     // input 엘리먼트가 클릭되었을 때 input 버튼을 클릭하기 위해 click() 메서드를 사용
@@ -30,7 +30,7 @@ const UploadedImage = () => {
       };
       console.log(file);
       if (file !== undefined) {
-        setUpLoadImageBool(true);
+        setIsImageUploaded(true);
       }
       // updateRegisterHomeUpLoadFile(file);
       // updateRegisterHomeWholeInfo(file.name, 1);
