@@ -24,3 +24,8 @@ export const isPaidWithCrpytoState = atom<boolean>({
   key: "IsPaidWithCrpytoState",
   default: false,
 });
+
+export const isPaybackReceivedState = atom<boolean>({
+  key: "IsPaybackReceivedState",
+  default: false,
+});

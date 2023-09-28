@@ -2,37 +2,30 @@ import React, { ReactElement } from "react";
 import Carousel from "react-material-ui-carousel";
 import styled from "styled-components";
 import { colors } from "./lib/colors";
-import { ImageProps, IndexProps, OnClickProps } from "./lib/interfaces";
+import {
+  AllChallengeProps,
+  ImageProps,
+  IndexProps,
+  OnClickProps,
+} from "./lib/interfaces";
 import { useRouter } from "next/router";
+import { daysBetweenDates } from "./lib/dates";
 
-const ChallengesCarousel: React.FC = () => {
+interface ChallengesCarouselProps {
+  data: AllChallengeProps[];
+}
+
+const ChallengesCarousel: React.FC<ChallengesCarouselProps> = ({ data }) => {
   const router = useRouter();
-  const items: ReactElement[] = [
+  const items: ReactElement[] = data.map((datum, index) => (
     <Challenge
       onClick={() => {
-        router.push("/challenges/diet");
+        router.push(`/challenges/${datum.challengeId}`);
       }}
-      key={1}
-    />,
-    <Challenge
-      onClick={() => {
-        router.push("/challenges/diet");
-      }}
-      key={2}
-    />,
-    <Challenge
-      onClick={() => {
-        router.push("/challenges/diet");
-      }}
-      key={3}
-    />,
-    <Challenge
-      onClick={() => {
-        router.push("/challenges/diet");
-      }}
-      key={4}
-    />,
-  ];
+      datum={datum}
+      key={index}
+    />
+  ));
 
   return (
     <Carousel
@@ -50,7 +43,6 @@ const ChallengesCarousel: React.FC = () => {
 
 export default ChallengesCarousel;
 
-// Helper function to chunk the array
 function chunkArray(
   myArray: ReactElement[],
   chunk_size: number
@@ -64,7 +56,6 @@ function chunkArray(
   return results;
 }
 
-// Custom Item component to render chunks
 interface ItemProps {
   chunk: ReactElement[];
 }
@@ -83,28 +74,63 @@ const Item: React.FC<ItemProps> = ({ chunk }) => {
     </div>
   );
 };
+interface ChallengeProps extends OnClickProps {
+  datum: AllChallengeProps;
+}
 
-const Challenge = ({ onClick }: OnClickProps) => {
+const Challenge = ({ onClick, datum }: ChallengeProps) => {
+  console.log(datum.challengeTotalDeposit);
+  console.log(datum.challengeParticipantsCount);
   return (
     <ChallengeWrapper onClick={onClick}>
       <ChallengeThumbnail imageUrl="/pages/home/dietThumbnail.svg" />
-      <ChallengeTitle>Lose 4lbs</ChallengeTitle>
-      <ChallengePeriod>Sep 11st - Oct 11st</ChallengePeriod>
+      <ChallengeTitle>{datum.challengeName}</ChallengeTitle>
+      <ChallengePeriod>
+        {datum.challengeStartsAt} -{datum.challengeEndsAt}
+      </ChallengePeriod>
       <div
         style={{
           display: "flex",
           marginTop: "5px",
         }}
       >
-        <ChallengeParticipants>30 particiants</ChallengeParticipants>
-        <ChallengeTotalDeposit>$3,800</ChallengeTotalDeposit>
+        <ChallengeParticipants>
+          {datum.challengeParticipantsCount} particiants
+        </ChallengeParticipants>
+        <ChallengeTotalDeposit>
+          ${datum.challengeTotalDeposit}
+        </ChallengeTotalDeposit>
       </div>
       <ChallengeTagContainer>
-        <ChallengeTag index={0}>Everyday</ChallengeTag>
-        <ChallengeTag index={1}>1 Month</ChallengeTag>
+        <ChallengeTag index={0}>
+          {datum.challengeVerificationFrequency}
+        </ChallengeTag>
+        <ChallengeTag index={1}>
+          {daysBetweenDates(datum.challengeEndsAt, datum.challengeStartsAt)}
+        </ChallengeTag>
       </ChallengeTagContainer>
     </ChallengeWrapper>
   );
+  // return (
+  //   <ChallengeWrapper onClick={onClick}>
+  //     <ChallengeThumbnail imageUrl="/pages/home/dietThumbnail.svg" />
+  //     <ChallengeTitle>Lose 4lbs</ChallengeTitle>
+  //     <ChallengePeriod>Sep 11st - Oct 11st</ChallengePeriod>
+  //     <div
+  //       style={{
+  //         display: "flex",
+  //         marginTop: "5px",
+  //       }}
+  //     >
+  //       <ChallengeParticipants>30 particiants</ChallengeParticipants>
+  //       <ChallengeTotalDeposit>$3,800</ChallengeTotalDeposit>
+  //     </div>
+  //     <ChallengeTagContainer>
+  //       <ChallengeTag index={0}>Everyday</ChallengeTag>
+  //       <ChallengeTag index={1}>1 Month</ChallengeTag>
+  //     </ChallengeTagContainer>
+  //   </ChallengeWrapper>
+  // );
 };
 
 const ChallengeWrapper = styled.div`

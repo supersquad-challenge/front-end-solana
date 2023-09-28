@@ -1,13 +1,36 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Head from "next/head";
 import { Inter } from "next/font/google";
 import styled from "styled-components";
 import { useRouter } from "next/router";
 import SubHeaderBar from "../../src/SubHeaderBar";
 import { SubHeaderBarPlaceholder } from "../../src/PlaceHolder";
+import { AllChallengeProps } from "../../src/lib/interfaces";
+import getAllChallenges from "../../src/api/allChallenge";
+import { colors } from "../../src/lib/colors";
+import ChallengesCarousel from "../../src/ChallengesCarousel";
 
 export default function Ongoing() {
   const router = useRouter();
+  const [allChallengesData, setAllChallengesData] = useState<
+    AllChallengeProps[]
+  >([]);
+  useEffect(() => {
+    const fetchData = async () => {
+      const token = "YOUR_JWT_TOKEN_HERE";
+      const data = await getAllChallenges(token);
+
+      const ongoingChallenges = data.filter(
+        (challenge: AllChallengeProps) =>
+          challenge.challengeStatus === "ongoing"
+      );
+      setAllChallengesData(ongoingChallenges);
+    };
+
+    fetchData();
+  }, []);
+  console.log(allChallengesData);
+
   return (
     <>
       <Head>
@@ -17,27 +40,10 @@ export default function Ongoing() {
       <SubHeaderBar />
       <SubHeaderBarPlaceholder />
       <Container>
-        <BlackButton
-          onClick={() => {
-            router.push("/challenges/diet");
-          }}
-        >
-          Challenge Start
-        </BlackButton>
-        <BlackButton
-          onClick={() => {
-            router.push("/proove/diet");
-          }}
-        >
-          Snap your scale
-        </BlackButton>
-        <BlackButton
-          onClick={() => {
-            router.push("/myChallenges/ongoing");
-          }}
-        >
-          Challenge Payback
-        </BlackButton>
+        <ChallengeSection>
+          <ChallengeTag>#Diet</ChallengeTag>
+          <ChallengesCarousel data={allChallengesData} />
+        </ChallengeSection>
       </Container>
     </>
   );
@@ -91,4 +97,35 @@ const BlackButton = styled.div`
   align-items: center;
 
   text-align: center;
+`;
+
+const ChallengeSection = styled.div`
+  /* @media (max-width: 2160px) {
+      //PC
+    } */
+  @media (max-width: 576px) {
+    //mobile
+    height: 245px;
+    margin-top: 20px;
+    width: 90%;
+  }
+
+  /* border: 1px solid green;
+  box-sizing: border-box; */
+`;
+
+const ChallengeTag = styled.div`
+  /* @media (max-width: 2160px) {
+      //PC
+    } */
+  @media (max-width: 576px) {
+    //mobile
+    font-size: 30px;
+    margin-bottom: 10px;
+  }
+  font-weight: 800;
+  color: ${colors.black};
+
+  /* border: 1px solid green;
+  box-sizing: border-box; */
 `;

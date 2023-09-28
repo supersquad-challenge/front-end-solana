@@ -13,6 +13,7 @@ const shouldShowProfilePath = [
 const shouldShowHeaderTitlePath: { [key: string]: string } = {
   "/myChallenges/ongoing": "My Challenges",
   "/myChallenges/onApplication": "My Challenges",
+  "/myChallenges/completed": "My Challenges",
 };
 
 const MainHeaderBar = () => {

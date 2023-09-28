@@ -42,6 +42,7 @@ const Container = styled.div`
   border: 1px solid green;
   box-sizing: border-box; */
 `;
+
 const CheckImage = styled.img`
   /* @media (max-width: 2160px) {
     //PC

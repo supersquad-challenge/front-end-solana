@@ -24,10 +24,12 @@ function App({ Component, pageProps }: AppProps) {
   const dontShowPageHeaderBarPath = [
     "/myChallenges/onApplication/diet",
     "/myChallenges/ongoing/diet",
+    "/myChallenges/completed/diet",
   ];
   const shouldShowNavigationBarPath = [
     "/myChallenges/ongoing",
     "/myChallenges/onApplication",
+    "/myChallenges/completed",
   ];
   const shouldShowNavigationBarPathStartsWith = ["/home/"];
 

@@ -1,19 +1,50 @@
 import styled from "styled-components";
 import { IndexProps, TitleContentProps } from "./lib/interfaces";
 import { colors } from "./lib/colors";
+interface ChallengeInfoTableProps {
+  challengeStartsAt: string;
+  challengeEndsAt: string;
+  challengeVerificationMethod: string;
+  challengeVerificationFrequency: string;
+  cryptoYield: number;
+}
 
-const ChallengeInfoTable = () => {
+const ChallengeInfoTable = ({
+  challengeStartsAt,
+  challengeEndsAt,
+  challengeVerificationMethod,
+  challengeVerificationFrequency,
+  cryptoYield,
+}: ChallengeInfoTableProps) => {
+  if (challengeVerificationMethod == "photo verification") {
+    challengeVerificationMethod = "Take a picture";
+  }
   return (
     <ChallengeInfoContainer>
       <ChallengeInfo
         index={1}
         title="Schedule"
-        content={"Sep 11st -\nOct 11st"}
+        content={`${challengeStartsAt} - ${challengeEndsAt}`}
+        // content={"Sep 11st -\nOct 11st"}
       />
-      <ChallengeInfo index={2} title="How To" content="Take a picture" />
+      <ChallengeInfo
+        index={2}
+        title="How To"
+        content={challengeVerificationMethod}
+        // content="Take a picture"
+      />
 
-      <ChallengeInfo index={3} title="Complete" content="Everyday" />
-      <ChallengeInfo index={4} title="CryptoYield+" content="+1.86%" />
+      <ChallengeInfo
+        index={3}
+        title="Complete"
+        content={challengeVerificationFrequency}
+      />
+      <ChallengeInfo
+        index={4}
+        title="CryptoYield+"
+        content={`+${cryptoYield}%`}
+        // content="+1.86%"
+      />
     </ChallengeInfoContainer>
   );
 };

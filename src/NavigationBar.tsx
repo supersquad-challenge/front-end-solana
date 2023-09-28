@@ -17,7 +17,7 @@ const NavigationBar = () => {
             router.push("/home");
           }}
         >
-          <img src="/NavigationBar/home.svg" alt="home" />
+          <img src="/NavigationBar/home1.svg" alt="home" />
         </NavigationBarWrapper>
         <NavigationBarWrapper
           isClicked={pathname.startsWith("/myChallenges")}
@@ -25,10 +25,10 @@ const NavigationBar = () => {
             router.push("/myChallenges");
           }}
         >
-          <img src="/NavigationBar/clock.svg" alt="time" />
+          <img src="/NavigationBar/flag1.svg" alt="flag" />
         </NavigationBarWrapper>
         <NavigationBarWrapper isClicked={false}>
-          <img src="/NavigationBar/profile.svg" alt="profile" />
+          <img src="/NavigationBar/user1.svg" alt="user" />
         </NavigationBarWrapper>
       </NavigationBarContainer>
     </Container>

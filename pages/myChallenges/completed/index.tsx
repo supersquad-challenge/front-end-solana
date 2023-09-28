@@ -3,12 +3,26 @@ import React from "react";
 
 import { useEffect, useState } from "react";
 
-import SubHeaderBar from "../../src/SubHeaderBar";
-import { SubHeaderBarPlaceholder } from "../../src/PlaceHolder";
+import SubHeaderBar from "../../../src/SubHeaderBar";
+import { SubHeaderBarPlaceholder } from "../../../src/PlaceHolder";
 
 import Head from "next/head";
+import { useRouter } from "next/router";
+import { useRecoilState } from "recoil";
+import {
+  isImageUploadedState,
+  isPaybackReceivedState,
+} from "../../../src/lib/states";
+import { colors } from "../../../src/lib/colors";
 
-const MyChallengesFinished = () => {
+const MyChallengesCompleted = () => {
+  const router = useRouter();
+  const [isImageUploaded, setIsImageUploaded] =
+    useRecoilState(isImageUploadedState);
+  const [isPaybackReceived, setIsPaybackReceived] = useRecoilState(
+    isPaybackReceivedState
+  );
+
   return (
     <>
       <Head>
@@ -18,43 +32,45 @@ const MyChallengesFinished = () => {
       <SubHeaderBar />
       <SubHeaderBarPlaceholder />
       <Container>
-        <MyChllengeWrapper>
+        <MyChllengeWrapper
+          onClick={() => {
+            router.push("/myChallenges/ongoing/diet");
+          }}
+        >
           <MyChallengeThumbnail src="/pages/myChallenges/dietExSmall.svg" />
           <MyChallengeInfoWrapper>
             <MyChallengeTitle>Lose 6lbs</MyChallengeTitle>
             <MyChallengeDuration>Everyday | 1 Month</MyChallengeDuration>
-            <div
-              style={{
-                width: "153px",
-                height: "63px",
-                marginTop: "16px",
-                display: "flex",
-              }}
-            >
-              <ValuesWrapper>
-                <ValueRatio>100%</ValueRatio>
-                <ValueTitle>
-                  Done So <br />
-                  Far
-                </ValueTitle>
-              </ValuesWrapper>
-              <ValuesWrapper>
-                <ValueRatio>6.86%</ValueRatio>
-                <ValueTitle>
-                  Realized <br />
-                  Yield
-                </ValueTitle>
-              </ValuesWrapper>
-            </div>
-            <PurpleButton>Challenge Payback</PurpleButton>
+            {isPaybackReceived ? (
+              <GrayButton
+                onClick={() => {
+                  router.push("/myChallenges/completed/diet");
+                }}
+              >
+                Mission Completed
+              </GrayButton>
+            ) : (
+              <PurpleButton
+                onClick={(event) => {
+                  event.stopPropagation();
+                  router.push("/myChallenges/completed/diet");
+                }}
+              >
+                Get Payback
+              </PurpleButton>
+            )}
           </MyChallengeInfoWrapper>
+          <GoDetailButton
+            src="/pages/myChallenges/goDetail.svg"
+            alt="goDetail"
+          />
         </MyChllengeWrapper>
       </Container>
     </>
   );
 };
 
-export default MyChallengesFinished;
+export default MyChallengesCompleted;
 
 const Container = styled.div`
   /* @media (max-width: 2160px) {
@@ -84,7 +100,7 @@ const MyChllengeWrapper = styled.div`
   @media (max-width: 576px) {
     //mobile
     width: 345px;
-    height: 224px;
+    height: 115px;
     border-radius: 20px;
     margin-top: 20px;
   }
@@ -112,7 +128,6 @@ const MyChallengeInfoWrapper = styled.div`
   @media (max-width: 576px) {
     //mobile
     width: 188px;
-    height: 194px;
 
     left: 122px;
     top: 15px;
@@ -132,8 +147,6 @@ const MyChallengeTitle = styled.div`
     height: 25px;
 
     font-size: 18px;
-
-    margin-top: 9px;
   }
   font-weight: 600;
   color: #121212;
@@ -169,43 +182,6 @@ const ValuesWrapper = styled.div`
   box-sizing: border-box; */
 `;
 
-const ValueRatio = styled.div`
-  /* @media (max-width: 2160px) {
-    //PC
-  } */
-  @media (max-width: 576px) {
-    //mobile
-    height: 25px;
-    font-size: 18px;
-    font-weight: 600;
-  }
-  display: flex;
-  align-items: center;
-  color: #121212;
-
-  /* border: 1px solid black;
-  box-sizing: border-box; */
-`;
-
-const ValueTitle = styled.div`
-  /* @media (max-width: 2160px) {
-    //PC
-  } */
-  @media (max-width: 576px) {
-    //mobile
-    height: 36px;
-    font-size: 14px;
-    font-weight: 400;
-  }
-  display: flex;
-  align-items: center;
-
-  color: #898989;
-
-  /* border: 1px solid black;
-  box-sizing: border-box; */
-`;
-
 const PurpleButton = styled.div`
   /* @media (max-width: 2160px) {
     //PC
@@ -214,10 +190,10 @@ const PurpleButton = styled.div`
     //mobile
     width: 171px;
     height: 34px;
-    margin-top: 16px;
+    margin-top: 10px;
 
     font-size: 14px;
-    font-weight: 500;
+    font-weight: 400;
 
     border-radius: 50px;
   }
@@ -235,4 +211,46 @@ const PurpleButton = styled.div`
   }
 
   color: white;
+`;
+
+const GrayButton = styled.div`
+  /* @media (max-width: 2160px) {
+    //PC
+  } */
+  @media (max-width: 576px) {
+    //mobile
+    width: 171px;
+    height: 34px;
+    margin-top: 10px;
+
+    font-size: 14px;
+    font-weight: 400;
+
+    border-radius: 50px;
+  }
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  text-align: center;
+
+  background-color: #dadada;
+
+  color: ${colors.black};
+`;
+
+const GoDetailButton = styled.img`
+  /* @media (max-width: 2160px) {
+    //PC
+  } */
+  @media (max-width: 576px) {
+    //mobile
+    width: 5px;
+    height: 10px;
+
+    right: 12px;
+    top: 50px;
+  }
+  position: absolute;
 `;

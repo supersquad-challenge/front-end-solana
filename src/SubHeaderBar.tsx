@@ -7,57 +7,65 @@ const SubHeaderBar = () => {
   const router = useRouter();
   const { pathname } = router;
 
-  const OnApplication_Ongoing = () => {
+  const HomeSubHeaderBar = () => {
     return (
       <SubHeaderBarContainer>
-        <SubHeaderBarWrapper
+        <HomeSubHeaderBarWrapper
           isClicked={pathname === "/home/onApplication"}
           onClick={() => {
             router.push("/home/onApplication");
           }}
         >
           OnApplication
-        </SubHeaderBarWrapper>
-        <SubHeaderBarWrapper
+        </HomeSubHeaderBarWrapper>
+        <HomeSubHeaderBarWrapper
           isClicked={pathname === "/home/ongoing"}
           onClick={() => {
             router.push("/home/ongoing");
           }}
         >
           Ongoing
-        </SubHeaderBarWrapper>
+        </HomeSubHeaderBarWrapper>
       </SubHeaderBarContainer>
     );
   };
 
   //여기는 바뀌어야함.
-  const MyChallengesPageHeaderBar = () => {
+  const MyChallengesSubHeaderBar = () => {
     return (
       <SubHeaderBarContainer>
-        <SubHeaderBarWrapper
+        <MyChallengesSubHeaderBarWrapper
           isClicked={pathname === "/myChallenges/onApplication"}
           onClick={() => {
             router.push("/myChallenges/onApplication");
           }}
         >
           On Application (14)
-        </SubHeaderBarWrapper>
-        <SubHeaderBarWrapper
+        </MyChallengesSubHeaderBarWrapper>
+        <MyChallengesSubHeaderBarWrapper
           isClicked={pathname === "/myChallenges/ongoing"}
           onClick={() => {
             router.push("/myChallenges/ongoing");
           }}
         >
           Ongoing (1)
-        </SubHeaderBarWrapper>
+        </MyChallengesSubHeaderBarWrapper>
+        <MyChallengesSubHeaderBarWrapper
+          isClicked={pathname === "/myChallenges/completed"}
+          onClick={() => {
+            router.push("/myChallenges/completed");
+          }}
+        >
+          Completed
+        </MyChallengesSubHeaderBarWrapper>
       </SubHeaderBarContainer>
     );
   };
 
   return (
     <>
-      {pathname.startsWith("/home/") && <OnApplication_Ongoing />}
-      {pathname.startsWith("/myChallenges/") && <MyChallengesPageHeaderBar />}
+      {pathname.startsWith("/home/") && <HomeSubHeaderBar />}
+      {pathname.startsWith("/myChallenges/") && <MyChallengesSubHeaderBar />}
     </>
   );
 };
@@ -85,7 +93,7 @@ const SubHeaderBarContainer = styled.div`
     box-sizing: border-box; */
 `;
 
-const SubHeaderBarWrapper = styled.div<IsClickedProps>`
+const HomeSubHeaderBarWrapper = styled.div<IsClickedProps>`
   /* @media (max-width: 2160px) {
       //PC
     } */
@@ -94,6 +102,30 @@ const SubHeaderBarWrapper = styled.div<IsClickedProps>`
     font-size: 14px;
   }
   width: 50%;
+  height: 100%;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  text-align: center;
+
+  font-weight: 500;
+  color: #6f7789;
+
+  border-bottom: ${(props) => (props.isClicked ? "1px solid #121212" : "none")};
+  box-sizing: border-box;
+`;
+
+const MyChallengesSubHeaderBarWrapper = styled.div<IsClickedProps>`
+  /* @media (max-width: 2160px) {
+      //PC
+    } */
+  @media (max-width: 576px) {
+    //mobile
+    font-size: 14px;
+  }
+  width: 33%;
   height: 100%;
 
   display: flex;

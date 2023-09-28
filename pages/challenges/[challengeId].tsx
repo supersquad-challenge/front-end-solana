@@ -1,11 +1,12 @@
 import styled from "styled-components";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   IsOpenProps,
   BackgroundColorProps,
   TitleContentProps,
   IndexProps,
   IsClickedProps,
+  ChallengeByIdProps,
 } from "../../src/lib/interfaces";
 import { colors } from "../../src/lib/colors";
 import ChallengeInfoModal from "../../src/page/challenges/ChallengeInfoModal";
@@ -13,10 +14,13 @@ import PaymentMethodModal from "../../src/page/challenges/PaymentMethodModal";
 import { useRecoilValue } from "recoil";
 import { paymentMethodState } from "../../src/lib/states";
 import ChallengeInfoTable from "../../src/ChallengeInfoTable";
+import { useRouter } from "next/router";
+import { getChallengeInfo } from "../../src/api/challengeById";
+import { daysBetweenDates } from "../../src/lib/dates";
 
 //PaymentMethodModal => ChallengeInfoModal
 
-const ChallengesDiet = () => {
+const IndividualChallenge = () => {
   const [isChallengeInfoModalOpen, setIsChallengeInfoModalOpen] =
     useState(false);
 
@@ -37,6 +41,26 @@ const ChallengesDiet = () => {
     }
   };
 
+  const router = useRouter();
+  const { challengeId } = router.query; // URL에서 challengeId 가져오기
+  const [challengeInfo, setChallengeInfo] = useState<ChallengeByIdProps>();
+
+  // const fetchData = async () => {
+  //   const data = await getChallengeInfo(challengeId as string);
+  //   setChallengeInfo(data);
+  // };
+  // fetchData();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = await getChallengeInfo(challengeId as string);
+      setChallengeInfo(data);
+    };
+    if (challengeId !== undefined) {
+      fetchData();
+    }
+  }, [challengeId]); // challengeId가 변경될 때마다 useEffect 실행
+
   return (
     <Container>
       <ChallengeThumbnailImage
@@ -44,13 +68,20 @@ const ChallengesDiet = () => {
         alt="miracleMorningChallengeThumbnail"
       />
       <TagsContainer>
-        <TagWrapper backgroundColor="#ECECEC">Everyday</TagWrapper>
-        <TagWrapper backgroundColor="#D6C0F0">1 Month</TagWrapper>
+        <TagWrapper backgroundColor="#ECECEC">
+          {challengeInfo?.challengeVerificationFrequency}
+        </TagWrapper>
+        <TagWrapper backgroundColor="#D6C0F0">
+          {daysBetweenDates(
+            challengeInfo?.challengeEndsAt as string,
+            challengeInfo?.challengeStartsAt as string
+          )}
+        </TagWrapper>
       </TagsContainer>
       {isChallengeInfoModalOpen == false && (
         <>
           <ChallengeContainer>
-            <ChallengeTitle>Lose 6lbs</ChallengeTitle>
+            <ChallengeTitle>{challengeInfo?.challengeName}</ChallengeTitle>
             <div
               style={{
                 marginTop: "5px",
@@ -58,10 +89,24 @@ const ChallengesDiet = () => {
                 display: "flex",
               }}
             >
-              <ChallengeParticipants>30 Paticipants</ChallengeParticipants>
-              <ChallengeTotalDeposit>$3,800</ChallengeTotalDeposit>
+              <ChallengeParticipants>
+                {challengeInfo?.challengeParticipantsCount} Paticipants
+              </ChallengeParticipants>
+              <ChallengeTotalDeposit>
+                ${challengeInfo?.challengeTotalDeposit}
+              </ChallengeTotalDeposit>
             </div>
-            <ChallengeInfoTable />
+            <ChallengeInfoTable
+              challengeStartsAt={challengeInfo?.challengeStartsAt as string}
+              challengeEndsAt={challengeInfo?.challengeEndsAt as string}
+              challengeVerificationMethod={
+                challengeInfo?.challengeVerificationMethod as string
+              }
+              challengeVerificationFrequency={
+                challengeInfo?.challengeVerificationFrequency as string
+              }
+              cryptoYield={challengeInfo?.cryptoYield as number}
+            />
           </ChallengeContainer>
           <BlackFixedButton onClick={handleIAmInButtonClick}>
             I am in!
@@ -82,20 +127,7 @@ const ChallengesDiet = () => {
   );
 };
 
-export default ChallengesDiet;
-
-// interface IndexTitleContentProps extends IndexProps, TitleContentProps {}
-
-// const ChallengeInfo = ({ index, title, content }: IndexTitleContentProps) => {
-//   return (
-//     <ChallengeInfoWrapper index={index}>
-//       <ChallengeInfoTitle>{title}</ChallengeInfoTitle>
-//       <ChallengeInfoContent style={{ whiteSpace: "pre-line" }} index={index}>
-//         {content}
-//       </ChallengeInfoContent>
-//     </ChallengeInfoWrapper>
-//   );
-// };
+export default IndividualChallenge;
 
 const Container = styled.div`
   /* @media (max-width: 2160px) {

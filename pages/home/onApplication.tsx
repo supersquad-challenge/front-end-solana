@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Head from "next/head";
 import { Inter } from "next/font/google";
 import styled from "styled-components";
@@ -9,9 +9,32 @@ import { colors } from "../../src/lib/colors";
 
 import ChallengesCarousel from "../../src/ChallengesCarousel";
 import NavigationBar from "../../src/NavigationBar";
+import axios from "axios";
+import getAllChallenges from "../../src/api/allChallenge";
+import { AllChallengeProps } from "../../src/lib/interfaces";
 
 export default function OnApplication() {
   const router = useRouter();
+  const [allChallengesData, setAllChallengesData] = useState<
+    AllChallengeProps[]
+  >([]);
+  useEffect(() => {
+    const fetchData = async () => {
+      const token = "YOUR_JWT_TOKEN_HERE";
+      const data = await getAllChallenges(token);
+
+      const onApplicationChallenges = data.filter(
+        (challenge: AllChallengeProps) =>
+          challenge.challengeStatus === "onApplication"
+      );
+      setAllChallengesData(onApplicationChallenges);
+    };
+
+    fetchData();
+  }, []);
+  console.log(allChallengesData);
+
+  ////
   return (
     <>
       <Head>
@@ -23,7 +46,7 @@ export default function OnApplication() {
       <Container>
         <ChallengeSection>
           <ChallengeTag>#Diet</ChallengeTag>
-          <ChallengesCarousel />
+          <ChallengesCarousel data={allChallengesData} />
         </ChallengeSection>
       </Container>
     </>
