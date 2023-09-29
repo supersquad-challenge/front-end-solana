@@ -11,16 +11,26 @@ import {
 import { colors } from "../../src/lib/colors";
 import ChallengeInfoModal from "../../src/page/challenges/ChallengeInfoModal";
 import PaymentMethodModal from "../../src/page/challenges/PaymentMethodModal";
-import { useRecoilValue } from "recoil";
-import { paymentMethodState } from "../../src/lib/states";
+import { useRecoilState, useRecoilValue } from "recoil";
+import {
+  paymentMethodState,
+  registerChallengeIdState,
+} from "../../src/lib/states";
 import ChallengeInfoTable from "../../src/ChallengeInfoTable";
 import { useRouter } from "next/router";
 import { getChallengeInfo } from "../../src/api/challengeById";
 import { daysBetweenDates } from "../../src/lib/dates";
+import AfterPayment from "../../src/page/flow/AfterPayment";
 
 //PaymentMethodModal => ChallengeInfoModal
 
 const IndividualChallenge = () => {
+  const [isCashSelected, SetIsCashSelected] = useState(false);
+
+  const [registerChallengeId, setRegisterChallengeId] = useRecoilState(
+    registerChallengeIdState
+  );
+
   const [isChallengeInfoModalOpen, setIsChallengeInfoModalOpen] =
     useState(false);
 
@@ -37,19 +47,19 @@ const IndividualChallenge = () => {
   const handleGoOnButtonClick = () => {
     if (paymentMethod !== "") {
       setIsPaymentMethodModalOpen(false);
-      setIsChallengeInfoModalOpen(true);
+      if (paymentMethod == "crypto") {
+        setIsChallengeInfoModalOpen(true);
+      }
+      if (paymentMethod == "cash") {
+        SetIsCashSelected(true);
+      }
     }
   };
 
   const router = useRouter();
   const { challengeId } = router.query; // URL에서 challengeId 가져오기
+  setRegisterChallengeId(challengeId as string);
   const [challengeInfo, setChallengeInfo] = useState<ChallengeByIdProps>();
-
-  // const fetchData = async () => {
-  //   const data = await getChallengeInfo(challengeId as string);
-  //   setChallengeInfo(data);
-  // };
-  // fetchData();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -61,7 +71,9 @@ const IndividualChallenge = () => {
     }
   }, [challengeId]); // challengeId가 변경될 때마다 useEffect 실행
 
-  return (
+  return isCashSelected ? (
+    <AfterPayment />
+  ) : (
     <Container>
       <ChallengeThumbnailImage
         src="/pages/challenges/diet/miracleMorningEx.svg"
@@ -304,172 +316,4 @@ const BlackFixedButton = styled.div`
   align-items: center;
 
   text-align: center;
-`;
-
-const Modal = styled.div<IsOpenProps>`
-  /* @media (max-width: 2160px) {
-    //PC
-  } */
-  @media (max-width: 576px) {
-    height: 390px;
-    border-top-left-radius: 20px;
-    border-top-right-radius: 20px;
-
-    box-shadow: 0px -2px 10px rgba(0, 0, 0, 0.1); // 그림자 추가
-  }
-
-  position: fixed;
-  z-index: 200;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-
-  background-color: white;
-
-  transform: ${(props) =>
-    props.isOpen ? "translateY(0)" : "translateY(100%)"};
-  transition: transform 0.3s ease-in-out;
-`;
-
-const ModalChallengeInfoContainer = styled.div`
-  /* @media (max-width: 2160px) {
-    //PC
-  } */
-  @media (max-width: 576px) {
-    margin-top: 20px;
-    width: 343px;
-  }
-
-  /* border: 1px solid black;
-  box-sizing: border-box; */
-`;
-
-const ModalChallengeInfoWrapper = styled.div`
-  /* @media (max-width: 2160px) {
-    //PC
-  } */
-  @media (max-width: 576px) {
-    height: 21px;
-    font-size: 14px;
-    font-weight: 500;
-    margin-bottom: 20px;
-  }
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-`;
-
-const DepositWrapper = styled.div`
-  /* @media (max-width: 2160px) {
-    //PC
-  } */
-  @media (max-width: 576px) {
-    width: 343px;
-    height: 48px;
-
-    margin-top: 20px;
-    padding-left: 12px;
-
-    border-radius: 8px;
-  }
-
-  display: flex;
-  align-items: center;
-  text-align: center;
-
-  border: 1px solid #ececec;
-`;
-
-const UserAverageWrapper = styled.div`
-  /* @media (max-width: 2160px) {
-    //PC
-  } */
-  @media (max-width: 576px) {
-    width: 343px;
-    height: 22px;
-    font-size: 14px;
-  }
-  color: #898989;
-  font-weight: 500;
-  display: flex;
-  align-items: center;
-`;
-
-const OrangeText = styled.span`
-  color: #eb4826;
-`;
-
-const ModalPaymentMethodContainer = styled.div`
-  /* @media (max-width: 2160px) {
-    //PC
-  } */
-  @media (max-width: 576px) {
-    margin-top: 20px;
-    width: 343px;
-  }
-
-  /* border: 1px solid black;
-  box-sizing: border-box; */
-`;
-
-const ModalPaymentMethodWrapper = styled.div`
-  /* @media (max-width: 2160px) {
-    //PC
-  } */
-  @media (max-width: 576px) {
-    height: 56px;
-  }
-  width: 100%;
-  display: flex;
-
-  /* border: 1px solid black;
-  box-sizing: border-box; */
-`;
-
-const CheckButton = styled.div<IsClickedProps>`
-  /* @media (max-width: 2160px) {
-    //PC
-  } */
-  @media (max-width: 576px) {
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-  }
-  z-index: 201;
-  background-color: ${(props) =>
-    props.isClicked ? `${colors.lightPurple}` : "white"};
-
-  border: ${(props) => !props.isClicked && `${colors.lightGray}`};
-  box-sizing: border-box;
-`;
-
-const PaymentMethod = styled.div`
-  /* @media (max-width: 2160px) {
-    //PC
-  } */
-  @media (max-width: 576px) {
-    margin-top: 3px;
-    font-size: 18px;
-    font-weight: 500;
-  }
-  /* border: 1px solid green;
-  box-sizing: border-box; */
-`;
-
-const PaymentMethodDetail = styled.div`
-  /* @media (max-width: 2160px) {
-    //PC
-  } */
-  @media (max-width: 576px) {
-    font-size: 14px;
-    font-weight: 400;
-    margin-top: 10px;
-  }
-  /* border: 1px solid green;
-  box-sizing: border-box; */
 `;

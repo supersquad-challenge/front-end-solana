@@ -29,3 +29,13 @@ export const isPaybackReceivedState = atom<boolean>({
   key: "IsPaybackReceivedState",
   default: false,
 });
+
+export const userInfoIdState = atom<string>({
+  key: "UserInfoIdState",
+  default: "65157f55a2418f903092babd",
+});
+
+export const registerChallengeIdState = atom<string>({
+  key: "RegisterchallengeIdState",
+  default: "",
+});

@@ -28,7 +28,7 @@ const UploadedImage = () => {
       reader.onload = () => {
         setImageSrc(reader.result);
       };
-      console.log(file);
+      // console.log(file);
       if (file !== undefined) {
         setIsImageUploaded(true);
       }

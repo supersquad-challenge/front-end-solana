@@ -20,12 +20,12 @@ const MainHeaderBar = () => {
   const router = useRouter();
   const { pathname } = router;
   // console.log(pathname);
-  // // Object.keys(shouldShowHeaderTitlePath).some((key) => {
-  // //   if (pathname.startsWith(key)) {
-  // //     console.log(shouldShowHeaderTitlePath[key]);
-  // //   }
-  // //   return pathname.startsWith(key);
-  // // });
+  // Object.keys(shouldShowHeaderTitlePath).some((key) => {
+  //   if (pathname.startsWith(key)) {
+  //     console.log(shouldShowHeaderTitlePath[key]);
+  //   }
+  //   return pathname.startsWith(key);
+  // });
 
   /////상황별로 다르게 쓸 수 있음. /////
 

@@ -1,8 +1,10 @@
 import { useRouter } from "next/router";
+import { useRecoilState } from "recoil";
 import styled from "styled-components";
 
 const AfterPayment = () => {
   const router = useRouter();
+
   return (
     <Container>
       <CheckImage src="/pages/proove/diet/purpleCheck.svg" alt="prooveCheck" />

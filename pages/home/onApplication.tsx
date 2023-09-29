@@ -32,7 +32,7 @@ export default function OnApplication() {
 
     fetchData();
   }, []);
-  console.log(allChallengesData);
+  // console.log(allChallengesData);
 
   ////
   return (

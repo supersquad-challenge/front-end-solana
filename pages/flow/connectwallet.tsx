@@ -3,13 +3,27 @@ import React, { useState } from "react";
 import { useRouter } from "next/router";
 import { colors } from "../../src/lib/colors";
 import { SetterOrUpdater, useRecoilState } from "recoil";
-import { isPaidWithCrpytoState } from "../../src/lib/states";
+import {
+  isPaidWithCrpytoState,
+  registerChallengeIdState,
+  userInfoIdState,
+} from "../../src/lib/states";
 import AfterPayment from "../../src/page/flow/AfterPayment";
+import { registerMyChallenge } from "../../src/api/myChallengeRegister";
 
 export default function ConnectWallet() {
   const [isPaidWithCrypto, setIsPaidWithCrypto] = useRecoilState(
     isPaidWithCrpytoState
   );
+  const [userInfoId, setUserInfoId] = useRecoilState(userInfoIdState);
+  const router = useRouter();
+  const [registerChallengeId, setRegisterChallengeId] = useRecoilState(
+    registerChallengeIdState
+  );
+  if (typeof registerChallengeId === "string" && isPaidWithCrypto) {
+    // challengeId가 string 타입인지 확인
+    registerMyChallenge(userInfoId, registerChallengeId);
+  }
 
   return isPaidWithCrypto ? (
     <AfterPayment />

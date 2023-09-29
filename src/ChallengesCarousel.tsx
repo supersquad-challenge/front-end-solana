@@ -79,8 +79,6 @@ interface ChallengeProps extends OnClickProps {
 }
 
 const Challenge = ({ onClick, datum }: ChallengeProps) => {
-  console.log(datum.challengeTotalDeposit);
-  console.log(datum.challengeParticipantsCount);
   return (
     <ChallengeWrapper onClick={onClick}>
       <ChallengeThumbnail imageUrl="/pages/home/dietThumbnail.svg" />

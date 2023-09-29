@@ -11,7 +11,7 @@ declare global {
 
 const GoogleSignIn: React.FC = () => {
   const handleCredentialResponse = (response: any) => {
-    console.log("Encoded JWT ID token: " + response.credential);
+    // console.log("Encoded JWT ID token: " + response.credential);
   };
 
   useEffect(() => {
