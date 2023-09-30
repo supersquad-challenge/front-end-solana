@@ -2,15 +2,21 @@ import styled from "styled-components";
 import React from "react";
 import { useRouter } from "next/router";
 import { colors } from "./lib/colors";
+import { useRecoilState } from "recoil";
+import { isSignedInState } from "./lib/states";
 
-const shouldShowProfilePath = [
-  "/challenges/diet",
-  "/",
-  "/myChallenges/ongoing",
-  "/forDemo",
+const shouldShowLogoDBSIPath = ["/home/onApplication", "/home/ongoing"];
+
+const shouldShowBackDBSIPathStartsWith = ["/challenges/", "/myChallenges/"];
+
+const shouldShowBackPath = [
+  "/flow/connectwallet",
+  "/flow/inputnickname",
+  "/flow/signin",
+  "/proove/diet",
 ];
 
-const shouldShowHeaderTitlePath: { [key: string]: string } = {
+const shouldShowNaviBarNameDBSIPath: { [key: string]: string } = {
   "/myChallenges/ongoing": "My Challenges",
   "/myChallenges/onApplication": "My Challenges",
   "/myChallenges/completed": "My Challenges",
@@ -19,51 +25,60 @@ const shouldShowHeaderTitlePath: { [key: string]: string } = {
 const MainHeaderBar = () => {
   const router = useRouter();
   const { pathname } = router;
-  // console.log(pathname);
-  // Object.keys(shouldShowHeaderTitlePath).some((key) => {
-  //   if (pathname.startsWith(key)) {
-  //     console.log(shouldShowHeaderTitlePath[key]);
-  //   }
-  //   return pathname.startsWith(key);
-  // });
+  const [isSignedIn, setIsSignedIn] = useRecoilState(isSignedInState);
+  const shouldShowBackDBSI = shouldShowBackDBSIPathStartsWith.some((path) =>
+    router.pathname.startsWith(path)
+  ); //bool
+
+  const shouldShowNaviBarName = Object.keys(
+    shouldShowNaviBarNameDBSIPath
+  ).includes(router.pathname)
+    ? router.pathname
+    : null; //string
 
   /////상황별로 다르게 쓸 수 있음. /////
 
-  //Login 전
-  const Logo_SignIn = () => {
+  const Logo_DifferBySignIn = () => {
     return (
       <Container>
         <SuperSquad>SuperSquad</SuperSquad>
-        <SignInButton>Sign In</SignInButton>
-      </Container>
-    );
-  };
-
-  //Profile이 있다는 건 login을 했다는 것.
-  const Back_Alarm_Profile = () => {
-    return (
-      <Container>
-        {shouldShowProfilePath.includes(pathname) && (
+        {isSignedIn ? (
           <>
-            <GoBackButton
-              src="/PageHeaderBar/chevron-left.svg"
-              alt="goBack"
-              onClick={() => {
-                router.push("/forDemo");
-              }}
-            />
-            {pathname in shouldShowHeaderTitlePath && (
-              <PageHeaderTitle>
-                {shouldShowHeaderTitlePath[pathname]}
-              </PageHeaderTitle>
-            )}
-
             <ProfileImage src="/PageHeaderBar/profileEx.svg" alt="profileEx" />
             <NotificationButton
               src="/PageHeaderBar/notification.svg"
               alt="notification"
             />
           </>
+        ) : (
+          <SignInButton>Sign In</SignInButton>
+        )}
+      </Container>
+    );
+  };
+
+  //Profile이 있다는 건 login을 했다는 것.
+  const Back_DifferBySignIn = () => {
+    return (
+      <Container>
+        <GoBackButton
+          src="/PageHeaderBar/chevron-left.svg"
+          alt="goBack"
+          onClick={() => {
+            router.push("/home"); //이건 나중에 수정하면 될 듯.
+          }}
+        />
+
+        {isSignedIn ? (
+          <>
+            <ProfileImage src="/PageHeaderBar/profileEx.svg" alt="profileEx" />
+            <NotificationButton
+              src="/PageHeaderBar/notification.svg"
+              alt="notification"
+            />
+          </>
+        ) : (
+          <SignInButton>Sign In</SignInButton>
         )}
       </Container>
     );
@@ -76,47 +91,50 @@ const MainHeaderBar = () => {
           src="/PageHeaderBar/chevron-left.svg"
           alt="goBack"
           onClick={() => {
-            router.push("/forDemo");
+            router.push("/home");
           }}
         />
       </Container>
     );
   };
-  const NaviBarName_SignIn = () => {
-    let title = null;
-
-    // Object.keys(shouldShowHeaderTitlePath).some((key) => {
-    //   if (pathname.startsWith(key)) {
-    //     title = shouldShowHeaderTitlePath[key];
-    //     return true; // 종료 조건
-    //   }
-    //   return false; // 계속 진행
-    // });
-    Object.keys(shouldShowHeaderTitlePath).some((key) => {
-      if (pathname == key) {
-        title = shouldShowHeaderTitlePath[key];
-        return true; // 종료 조건
-      }
-      return false; // 계속 진행
-    });
+  const NaviBarName_DifferBySignIn = ({
+    shouldShowNaviBarName,
+  }: {
+    shouldShowNaviBarName: string;
+  }) => {
+    const title = shouldShowNaviBarNameDBSIPath[shouldShowNaviBarName];
 
     return (
       <Container>
-        {title && <PageHeaderTitle>{title}</PageHeaderTitle>}
-        <ProfileImage src="/PageHeaderBar/profileEx.svg" alt="profileEx" />
-        <NotificationButton
-          src="/PageHeaderBar/notification.svg"
-          alt="notification"
-        />
+        <PageHeaderTitle>{title}</PageHeaderTitle>
+        {isSignedIn ? (
+          <>
+            <ProfileImage src="/PageHeaderBar/profileEx.svg" alt="profileEx" />
+            <NotificationButton
+              src="/PageHeaderBar/notification.svg"
+              alt="notification"
+            />
+          </>
+        ) : (
+          <SignInButton>Sign In</SignInButton>
+        )}
       </Container>
     );
   };
 
   return (
-    // <Back_Alarm_Profile />
-    // <Logo_SignIn />
-    // <Back />
-    <NaviBarName_SignIn />
+    <>
+      {shouldShowLogoDBSIPath.includes(router.pathname) && (
+        <Logo_DifferBySignIn />
+      )}
+      {shouldShowBackDBSI && <Back_DifferBySignIn />}
+      {shouldShowNaviBarName && (
+        <NaviBarName_DifferBySignIn
+          shouldShowNaviBarName={shouldShowNaviBarName}
+        />
+      )}
+      {shouldShowBackPath.includes(router.pathname) && <Back />}
+    </>
   );
 };
 

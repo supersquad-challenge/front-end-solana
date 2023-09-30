@@ -23,7 +23,7 @@ export default function InputNickname() {
     if (nickname == "") {
       setShowWaning(true);
     } else {
-      console.log(nickname);
+      // console.log(nickname);
     }
   };
 

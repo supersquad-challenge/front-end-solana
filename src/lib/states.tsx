@@ -16,6 +16,7 @@ export const paymentMethodState = atom<string>({
 });
 
 export const isSignedInState = atom<boolean>({
+  /////여기 바꿔서
   key: "IsSignedInState",
   default: false,
 });

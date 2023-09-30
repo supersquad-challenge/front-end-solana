@@ -56,3 +56,14 @@ export interface ChallengeByIdProps {
   challengeVerificationMethod: string;
   cryptoYield: number;
 }
+
+export interface MyStatusProps {
+  userChallengeId: string;
+  successRate: number;
+  deposit: number;
+  challengeStatus: string;
+  challengeVerificationFrequency: string;
+  challengeStartsAt: string;
+  challengeEndsAt: string;
+  challengeName: string;
+}

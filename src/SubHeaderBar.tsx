@@ -40,7 +40,7 @@ const SubHeaderBar = () => {
             router.push("/myChallenges/onApplication");
           }}
         >
-          On Application (14)
+          On Application
         </MyChallengesSubHeaderBarWrapper>
         <MyChallengesSubHeaderBarWrapper
           isClicked={pathname === "/myChallenges/ongoing"}
@@ -48,7 +48,7 @@ const SubHeaderBar = () => {
             router.push("/myChallenges/ongoing");
           }}
         >
-          Ongoing (1)
+          Ongoing
         </MyChallengesSubHeaderBarWrapper>
         <MyChallengesSubHeaderBarWrapper
           isClicked={pathname === "/myChallenges/completed"}

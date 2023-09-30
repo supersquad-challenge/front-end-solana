@@ -7,8 +7,60 @@ import SubHeaderBar from "../../../src/SubHeaderBar";
 import { SubHeaderBarPlaceholder } from "../../../src/PlaceHolder";
 
 import Head from "next/head";
+import { useRouter } from "next/router";
+import { colors } from "../../../src/lib/colors";
+import { useRecoilState } from "recoil";
+import { userInfoIdState } from "../../../src/lib/states";
+import { MyStatusProps } from "../../../src/lib/interfaces";
+import { getAllMyChallenges } from "../../../src/api/allMyChallenge";
+import { getMyChallengeStatus } from "../../../src/api/myStatus";
+import { daysBetweenDates } from "../../../src/lib/dates";
 
 const MyChallengesOnApplication = () => {
+  const [userInfoId, setUserInfoId] = useRecoilState(userInfoIdState);
+  const [allMyUserChallengeIds, setAllMyUserChallengeIds] = useState([]);
+  const [allMyChallenges, setAllMyChallenges] = useState<MyStatusProps[]>([]);
+
+  const addObject = (obj: MyStatusProps) => {
+    setAllMyChallenges((prevArray) => {
+      // 이미 존재하는 객체인지 확인
+      const exists = prevArray.some(
+        (existingObj) => existingObj.userChallengeId === obj.userChallengeId
+      );
+
+      const statusIsOnApplication = obj.challengeStatus == "onApplication";
+
+      // 존재하지 않으면 추가
+      if (!exists && statusIsOnApplication) {
+        return [...prevArray, obj];
+      }
+
+      // 존재하면 기존 배열을 그대로 반환
+      return prevArray;
+    });
+  };
+
+  const fetchData = async () => {
+    const data = await getAllMyChallenges(userInfoId as string);
+    setAllMyUserChallengeIds(data);
+
+    const statusPromises = data.map((userChallengeId: string) =>
+      getMyChallengeStatus(userChallengeId)
+    );
+    const statuses = await Promise.all(statusPromises);
+
+    statuses.forEach((status) => addObject(status));
+    console.log(allMyChallenges);
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []); // dependency 배열
+
+  useEffect(() => {
+    console.log(allMyChallenges);
+  }, [allMyChallenges]); // allMyChallenges가 변경될 때마다 로그 출력
+
   return (
     <>
       <Head>
@@ -18,43 +70,47 @@ const MyChallengesOnApplication = () => {
       <SubHeaderBar />
       <SubHeaderBarPlaceholder />
       <Container>
-        <MyChllengeWrapper>
-          <MyChallengeThumbnail src="/pages/myChallenges/dietExSmall.svg" />
-          <MyChallengeInfoWrapper>
-            <MyChallengeTitle>Lose 6lbs</MyChallengeTitle>
-            <MyChallengeDuration>Everyday | 1 Month</MyChallengeDuration>
-            <div
-              style={{
-                width: "153px",
-                height: "63px",
-                marginTop: "16px",
-                display: "flex",
-              }}
-            >
-              <ValuesWrapper>
-                <ValueRatio>100%</ValueRatio>
-                <ValueTitle>
-                  Done So <br />
-                  Far
-                </ValueTitle>
-              </ValuesWrapper>
-              <ValuesWrapper>
-                <ValueRatio>6.86%</ValueRatio>
-                <ValueTitle>
-                  Realized <br />
-                  Yield
-                </ValueTitle>
-              </ValuesWrapper>
-            </div>
-            <PurpleButton>Challenge Payback</PurpleButton>
-          </MyChallengeInfoWrapper>
-        </MyChllengeWrapper>
+        {allMyChallenges.map((myChallenge) => (
+          <MyChallenge
+            key={myChallenge.userChallengeId}
+            myChallenge={myChallenge}
+          />
+        ))}
       </Container>
     </>
   );
 };
 
 export default MyChallengesOnApplication;
+
+const MyChallenge: React.FC<{ myChallenge: MyStatusProps }> = ({
+  myChallenge,
+}) => {
+  const router = useRouter();
+  const userChallengeId = myChallenge.userChallengeId;
+  return (
+    <MyChllengeWrapper
+      onClick={() => {
+        router.push(`/myChallenges/onApplication/${userChallengeId}`);
+      }}
+    >
+      <MyChallengeThumbnail src="/pages/myChallenges/dietExSmall.svg" />
+      <MyChallengeInfoWrapper>
+        <MyChallengeTitle>{myChallenge.challengeName}</MyChallengeTitle>
+        <MyChallengeDuration>
+          {" "}
+          {myChallenge.challengeVerificationFrequency}|{" "}
+          {daysBetweenDates(
+            myChallenge?.challengeEndsAt as string,
+            myChallenge?.challengeStartsAt as string
+          )}
+        </MyChallengeDuration>
+        <GrayButton>Starting Soon</GrayButton>
+      </MyChallengeInfoWrapper>
+      <GoDetailButton src="/pages/myChallenges/goDetail.svg" alt="goDetail" />
+    </MyChllengeWrapper>
+  );
+};
 
 const Container = styled.div`
   /* @media (max-width: 2160px) {
@@ -84,7 +140,7 @@ const MyChllengeWrapper = styled.div`
   @media (max-width: 576px) {
     //mobile
     width: 345px;
-    height: 224px;
+    height: 115px;
     border-radius: 20px;
     margin-top: 20px;
   }
@@ -112,7 +168,6 @@ const MyChallengeInfoWrapper = styled.div`
   @media (max-width: 576px) {
     //mobile
     width: 188px;
-    height: 194px;
 
     left: 122px;
     top: 15px;
@@ -132,8 +187,6 @@ const MyChallengeTitle = styled.div`
     height: 25px;
 
     font-size: 18px;
-
-    margin-top: 9px;
   }
   font-weight: 600;
   color: #121212;
@@ -155,58 +208,7 @@ const MyChallengeDuration = styled.div`
   color: #898989;
 `;
 
-const ValuesWrapper = styled.div`
-  /* @media (max-width: 2160px) {
-    //PC
-  } */
-  @media (max-width: 576px) {
-    //mobile
-  }
-  height: 100%;
-  width: 50%;
-
-  /* border: 1px solid red;
-  box-sizing: border-box; */
-`;
-
-const ValueRatio = styled.div`
-  /* @media (max-width: 2160px) {
-    //PC
-  } */
-  @media (max-width: 576px) {
-    //mobile
-    height: 25px;
-    font-size: 18px;
-    font-weight: 600;
-  }
-  display: flex;
-  align-items: center;
-  color: #121212;
-
-  /* border: 1px solid black;
-  box-sizing: border-box; */
-`;
-
-const ValueTitle = styled.div`
-  /* @media (max-width: 2160px) {
-    //PC
-  } */
-  @media (max-width: 576px) {
-    //mobile
-    height: 36px;
-    font-size: 14px;
-    font-weight: 400;
-  }
-  display: flex;
-  align-items: center;
-
-  color: #898989;
-
-  /* border: 1px solid black;
-  box-sizing: border-box; */
-`;
-
-const PurpleButton = styled.div`
+const GrayButton = styled.div`
   /* @media (max-width: 2160px) {
     //PC
   } */
@@ -214,10 +216,10 @@ const PurpleButton = styled.div`
     //mobile
     width: 171px;
     height: 34px;
-    margin-top: 16px;
+    margin-top: 10px;
 
     font-size: 14px;
-    font-weight: 500;
+    font-weight: 700;
 
     border-radius: 50px;
   }
@@ -228,11 +230,22 @@ const PurpleButton = styled.div`
 
   text-align: center;
 
-  background-color: #8201ca;
+  background-color: #dadada;
 
-  &:hover {
-    background-color: #9c23d1;
+  color: ${colors.black};
+`;
+
+const GoDetailButton = styled.img`
+  /* @media (max-width: 2160px) {
+    //PC
+  } */
+  @media (max-width: 576px) {
+    //mobile
+    width: 5px;
+    height: 10px;
+
+    right: 12px;
+    top: 50px;
   }
-
-  color: white;
+  position: absolute;
 `;

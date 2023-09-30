@@ -29,7 +29,7 @@ export default function Ongoing() {
 
     fetchData();
   }, []);
-  console.log(allChallengesData);
+  // console.log(allChallengesData);
 
   return (
     <>

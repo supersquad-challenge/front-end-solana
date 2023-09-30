@@ -12,16 +12,62 @@ import { useRecoilState } from "recoil";
 import {
   isImageUploadedState,
   isPaybackReceivedState,
+  userInfoIdState,
 } from "../../../src/lib/states";
 import { colors } from "../../../src/lib/colors";
+import { MyStatusProps } from "../../../src/lib/interfaces";
+import { getAllMyChallenges } from "../../../src/api/allMyChallenge";
+import { getMyChallengeStatus } from "../../../src/api/myStatus";
+import { daysBetweenDates } from "../../../src/lib/dates";
 
 const MyChallengesCompleted = () => {
   const router = useRouter();
-  const [isImageUploaded, setIsImageUploaded] =
-    useRecoilState(isImageUploadedState);
   const [isPaybackReceived, setIsPaybackReceived] = useRecoilState(
     isPaybackReceivedState
   );
+  const [userInfoId, setUserInfoId] = useRecoilState(userInfoIdState);
+  const [allMyUserChallengeIds, setAllMyUserChallengeIds] = useState([]);
+  const [allMyChallenges, setAllMyChallenges] = useState<MyStatusProps[]>([]);
+
+  const addObject = (obj: MyStatusProps) => {
+    setAllMyChallenges((prevArray) => {
+      // 이미 존재하는 객체인지 확인
+      const exists = prevArray.some(
+        (existingObj) => existingObj.userChallengeId === obj.userChallengeId
+      );
+
+      const statusIsCompleted = obj.challengeStatus == "completed";
+
+      // 존재하지 않으면 추가
+      if (!exists && statusIsCompleted) {
+        return [...prevArray, obj];
+      }
+
+      // 존재하면 기존 배열을 그대로 반환
+      return prevArray;
+    });
+  };
+
+  const fetchData = async () => {
+    const data = await getAllMyChallenges(userInfoId as string);
+    setAllMyUserChallengeIds(data);
+
+    const statusPromises = data.map((userChallengeId: string) =>
+      getMyChallengeStatus(userChallengeId)
+    );
+    const statuses = await Promise.all(statusPromises);
+
+    statuses.forEach((status) => addObject(status));
+    console.log(allMyChallenges);
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []); // dependency 배열
+
+  useEffect(() => {
+    console.log(allMyChallenges);
+  }, [allMyChallenges]); // allMyChallenges가 변경될 때마다 로그 출력
 
   return (
     <>
@@ -32,45 +78,64 @@ const MyChallengesCompleted = () => {
       <SubHeaderBar />
       <SubHeaderBarPlaceholder />
       <Container>
-        <MyChllengeWrapper
-          onClick={() => {
-            router.push("/myChallenges/ongoing/diet");
-          }}
-        >
-          <MyChallengeThumbnail src="/pages/myChallenges/dietExSmall.svg" />
-          <MyChallengeInfoWrapper>
-            <MyChallengeTitle>Lose 6lbs</MyChallengeTitle>
-            <MyChallengeDuration>Everyday | 1 Month</MyChallengeDuration>
-            {isPaybackReceived ? (
-              <GrayButton
-                onClick={() => {
-                  router.push("/myChallenges/completed/diet");
-                }}
-              >
-                Mission Completed
-              </GrayButton>
-            ) : (
-              <PurpleButton
-                onClick={(event) => {
-                  event.stopPropagation();
-                  router.push("/myChallenges/completed/diet");
-                }}
-              >
-                Get Payback
-              </PurpleButton>
-            )}
-          </MyChallengeInfoWrapper>
-          <GoDetailButton
-            src="/pages/myChallenges/goDetail.svg"
-            alt="goDetail"
+        {allMyChallenges.map((myChallenge) => (
+          <MyChallenge
+            key={myChallenge.userChallengeId}
+            myChallenge={myChallenge}
           />
-        </MyChllengeWrapper>
+        ))}
       </Container>
     </>
   );
 };
 
 export default MyChallengesCompleted;
+
+const MyChallenge: React.FC<{ myChallenge: MyStatusProps }> = ({
+  myChallenge,
+}) => {
+  const router = useRouter();
+  const userChallengeId = myChallenge.userChallengeId;
+  return (
+    <MyChllengeWrapper
+      onClick={() => {
+        router.push(`/myChallenges/completed/${userChallengeId}`);
+      }}
+    >
+      <MyChallengeThumbnail src="/pages/myChallenges/dietExSmall.svg" />
+      <MyChallengeInfoWrapper>
+        <MyChallengeTitle>{myChallenge.challengeName}</MyChallengeTitle>
+        <MyChallengeDuration>
+          {" "}
+          {myChallenge.challengeVerificationFrequency}|{" "}
+          {daysBetweenDates(
+            myChallenge?.challengeEndsAt as string,
+            myChallenge?.challengeStartsAt as string
+          )}
+        </MyChallengeDuration>
+        {isPaybackReceivedState ? (
+          <GrayButton
+            onClick={() => {
+              router.push(`/myChallenges/completed/${userChallengeId}`);
+            }}
+          >
+            Mission Completed
+          </GrayButton>
+        ) : (
+          <PurpleButton
+            onClick={(event) => {
+              event.stopPropagation();
+              router.push(`/myChallenges/completed/${userChallengeId}`);
+            }}
+          >
+            Get Payback
+          </PurpleButton>
+        )}
+      </MyChallengeInfoWrapper>
+      <GoDetailButton src="/pages/myChallenges/goDetail.svg" alt="goDetail" />
+    </MyChllengeWrapper>
+  );
+};
 
 const Container = styled.div`
   /* @media (max-width: 2160px) {

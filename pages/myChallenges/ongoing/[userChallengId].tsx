@@ -72,7 +72,7 @@ const IndividualMyChallengeOngoing = () => {
             About
           </MiddleBarWrapper>
         </MiddleBarContainer>
-        {selectedMiddleBar == "My" && <My />}
+        {selectedMiddleBar == "My" && <My isImageUploaded={isImageUploaded} />}
         {selectedMiddleBar == "Total" && <Total />}
         {selectedMiddleBar == "About" && <About />}
       </ChallengeContainer>
@@ -89,7 +89,7 @@ const IndividualMyChallengeOngoing = () => {
 
 export default IndividualMyChallengeOngoing;
 
-const My = () => {
+const My = (isImageUploaded: boolean) => {
   return (
     <>
       <StatusTitle>My Status</StatusTitle>
@@ -104,7 +104,11 @@ const My = () => {
         <MyStatusSmallTitle index={0}>Your Deposit</MyStatusSmallTitle>
         <MyStautsSmallContent index={0}>$100</MyStautsSmallContent>
         <MyStatusSmallTitle index={1}>Availability</MyStatusSmallTitle>
-        <MyStautsSmallContent index={1}>23h 55m 50s</MyStautsSmallContent>
+        {isImageUploaded ? (
+          <MyStautsSmallContent index={1}>Completed</MyStautsSmallContent>
+        ) : (
+          <MyStautsSmallContent index={1}>23h 55m 50s</MyStautsSmallContent>
+        )}
       </MyStatusWrapper>
     </>
   );

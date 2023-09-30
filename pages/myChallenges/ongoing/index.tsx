@@ -3,19 +3,63 @@ import React from "react";
 
 import { useEffect, useState } from "react";
 
-import SubHeaderBar from "../../../src/SubHeaderBar";
-import { SubHeaderBarPlaceholder } from "../../../src/PlaceHolder";
-
-import Head from "next/head";
 import { useRouter } from "next/router";
 import { useRecoilState } from "recoil";
-import { isImageUploadedState } from "../../../src/lib/states";
+import { isImageUploadedState, userInfoIdState } from "../../../src/lib/states";
 import { colors } from "../../../src/lib/colors";
+import { getAllMyChallenges } from "../../../src/api/allMyChallenge";
+import { MyStatusProps } from "../../../src/lib/interfaces";
+import { getMyChallengeStatus } from "../../../src/api/myStatus";
+import Head from "next/head";
+import SubHeaderBar from "../../../src/SubHeaderBar";
+import { SubHeaderBarPlaceholder } from "../../../src/PlaceHolder";
+import { daysBetweenDates } from "../../../src/lib/dates";
 
 const MyChallengesOnGoing = () => {
-  const router = useRouter();
-  const [isImageUploaded, setIsImageUploaded] =
-    useRecoilState(isImageUploadedState);
+  const [userInfoId, setUserInfoId] = useRecoilState(userInfoIdState);
+  const [allMyUserChallengeIds, setAllMyUserChallengeIds] = useState([]);
+  const [allMyChallenges, setAllMyChallenges] = useState<MyStatusProps[]>([]);
+
+  const addObject = (obj: MyStatusProps) => {
+    setAllMyChallenges((prevArray) => {
+      // 이미 존재하는 객체인지 확인
+      const exists = prevArray.some(
+        (existingObj) => existingObj.userChallengeId === obj.userChallengeId
+      );
+
+      const statusIsOngoing = obj.challengeStatus == "ongoing";
+
+      // 존재하지 않으면 추가
+      if (!exists && statusIsOngoing) {
+        return [...prevArray, obj];
+      }
+
+      // 존재하면 기존 배열을 그대로 반환
+      return prevArray;
+    });
+  };
+
+  const fetchData = async () => {
+    const data = await getAllMyChallenges(userInfoId as string);
+    setAllMyUserChallengeIds(data);
+
+    const statusPromises = data.map((userChallengeId: string) =>
+      getMyChallengeStatus(userChallengeId)
+    );
+    const statuses = await Promise.all(statusPromises);
+
+    statuses.forEach((status) => addObject(status));
+    console.log(allMyChallenges);
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []); // dependency 배열
+
+  useEffect(() => {
+    console.log(allMyChallenges);
+  }, [allMyChallenges]); // allMyChallenges가 변경될 때마다 로그 출력
+
   return (
     <>
       <Head>
@@ -25,39 +69,57 @@ const MyChallengesOnGoing = () => {
       <SubHeaderBar />
       <SubHeaderBarPlaceholder />
       <Container>
-        <MyChllengeWrapper
-          onClick={() => {
-            router.push("/myChallenges/ongoing/diet");
-          }}
-        >
-          <MyChallengeThumbnail src="/pages/myChallenges/dietExSmall.svg" />
-          <MyChallengeInfoWrapper>
-            <MyChallengeTitle>Lose 6lbs</MyChallengeTitle>
-            <MyChallengeDuration>Everyday | 1 Month</MyChallengeDuration>
-            {isImageUploaded ? (
-              <GrayButton>Mission Completed</GrayButton>
-            ) : (
-              <PurpleButton
-                onClick={(event) => {
-                  event.stopPropagation();
-                  router.push("/proove/diet");
-                }}
-              >
-                Complete Mission
-              </PurpleButton>
-            )}
-          </MyChallengeInfoWrapper>
-          <GoDetailButton
-            src="/pages/myChallenges/goDetail.svg"
-            alt="goDetail"
+        {allMyChallenges.map((myChallenge) => (
+          <MyChallenge
+            key={myChallenge.userChallengeId}
+            myChallenge={myChallenge}
           />
-        </MyChllengeWrapper>
+        ))}
       </Container>
     </>
   );
 };
 
 export default MyChallengesOnGoing;
+const MyChallenge: React.FC<{ myChallenge: MyStatusProps }> = ({
+  myChallenge,
+}) => {
+  const router = useRouter();
+  const [isImageUploaded] = useRecoilState(isImageUploadedState);
+  return (
+    <MyChllengeWrapper
+      onClick={() => {
+        router.push("/myChallenges/ongoing/diet");
+      }}
+    >
+      <MyChallengeThumbnail src="/pages/myChallenges/dietExSmall.svg" />
+      <MyChallengeInfoWrapper>
+        <MyChallengeTitle>{myChallenge.challengeName}</MyChallengeTitle>
+        <MyChallengeDuration>
+          {" "}
+          {myChallenge.challengeVerificationFrequency}|{" "}
+          {daysBetweenDates(
+            myChallenge?.challengeEndsAt as string,
+            myChallenge?.challengeStartsAt as string
+          )}
+        </MyChallengeDuration>
+        {isImageUploaded ? (
+          <GrayButton>Mission Completed</GrayButton>
+        ) : (
+          <PurpleButton
+            onClick={(event) => {
+              event.stopPropagation();
+              router.push("/proove/diet");
+            }}
+          >
+            Complete Mission
+          </PurpleButton>
+        )}
+      </MyChallengeInfoWrapper>
+      <GoDetailButton src="/pages/myChallenges/goDetail.svg" alt="goDetail" />
+    </MyChllengeWrapper>
+  );
+};
 
 const Container = styled.div`
   /* @media (max-width: 2160px) {
@@ -155,20 +217,6 @@ const MyChallengeDuration = styled.div`
   color: #898989;
 `;
 
-const ValuesWrapper = styled.div`
-  /* @media (max-width: 2160px) {
-    //PC
-  } */
-  @media (max-width: 576px) {
-    //mobile
-  }
-  height: 100%;
-  width: 50%;
-
-  /* border: 1px solid red;
-  box-sizing: border-box; */
-`;
-
 const PurpleButton = styled.div`
   /* @media (max-width: 2160px) {
     //PC
@@ -211,7 +259,7 @@ const GrayButton = styled.div`
     margin-top: 10px;
 
     font-size: 14px;
-    font-weight: 400;
+    font-weight: 700;
 
     border-radius: 50px;
   }
