@@ -7,6 +7,9 @@ import {
   IndexProps,
   IsClickedProps,
   HeightTypeProps,
+  MyStatusProps,
+  TotalStatusProps,
+  ChallengeByIdProps,
 } from "../../../src/lib/interfaces";
 
 import { colors } from "../../../src/lib/colors";
@@ -14,6 +17,10 @@ import ChallengeInfoTable from "../../../src/ChallengeInfoTable";
 import { useRecoilState } from "recoil";
 import { isImageUploadedState } from "../../../src/lib/states";
 import { useRouter } from "next/router";
+import { getMyChallengeStatus } from "../../../src/api/myStatus";
+import { daysBetweenDates } from "../../../src/lib/dates";
+import { getMyChallengeTotalStatus } from "../../../src/api/totalStatus";
+import { getChallengeInfo } from "../../../src/api/challengeById";
 
 const SUCCESS_RATE = 40;
 
@@ -22,7 +29,20 @@ const IndividualMyChallengeOngoing = () => {
   const [isImageUploaded, setIsImageUploaded] =
     useRecoilState(isImageUploadedState);
 
+  const [myChallengeStatus, setMyChallengeStatus] = useState<MyStatusProps>();
   const router = useRouter();
+  const asPath = router.asPath;
+  const parts = asPath.split("/");
+  const userChallengeId = parts[parts.length - 1];
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setMyChallengeStatus(
+        await getMyChallengeStatus(userChallengeId as string)
+      );
+    };
+    fetchData();
+  }, [userChallengeId]); // challengeId가 변경될 때마다 useEffect 실행
 
   return (
     <Container heightType={selectedMiddleBar}>
@@ -31,11 +51,18 @@ const IndividualMyChallengeOngoing = () => {
         alt="miracleMorningChallengeThumbnail"
       />
       <TagsContainer>
-        <TagWrapper backgroundColor="#ECECEC">Everyday</TagWrapper>
-        <TagWrapper backgroundColor="#D6C0F0">1 Month</TagWrapper>
+        <TagWrapper backgroundColor="#ECECEC">
+          {myChallengeStatus?.challengeVerificationFrequency}
+        </TagWrapper>
+        <TagWrapper backgroundColor="#D6C0F0">
+          {daysBetweenDates(
+            myChallengeStatus?.challengeEndsAt as string,
+            myChallengeStatus?.challengeStartsAt as string
+          )}
+        </TagWrapper>
       </TagsContainer>
       <ChallengeContainer heightType={selectedMiddleBar}>
-        <ChallengeTitle>Lose 6lbs</ChallengeTitle>
+        <ChallengeTitle>{myChallengeStatus?.challengeName}</ChallengeTitle>
         <div
           style={{
             marginTop: "5px",
@@ -43,8 +70,12 @@ const IndividualMyChallengeOngoing = () => {
             display: "flex",
           }}
         >
-          <ChallengeParticipants>30 Paticipants</ChallengeParticipants>
-          <ChallengeTotalDeposit>$3,800</ChallengeTotalDeposit>
+          <ChallengeParticipants>
+            {myChallengeStatus?.challengeParticipantsCount} Paticipants
+          </ChallengeParticipants>
+          <ChallengeTotalDeposit>
+            ${myChallengeStatus?.challengeTotalDeposit}
+          </ChallengeTotalDeposit>
         </div>
         <MiddleBarContainer>
           <MiddleBarWrapper
@@ -72,9 +103,18 @@ const IndividualMyChallengeOngoing = () => {
             About
           </MiddleBarWrapper>
         </MiddleBarContainer>
-        {selectedMiddleBar == "My" && <My isImageUploaded={isImageUploaded} />}
-        {selectedMiddleBar == "Total" && <Total />}
-        {selectedMiddleBar == "About" && <About />}
+        {selectedMiddleBar == "My" && (
+          <My
+            isImageUploaded={isImageUploaded}
+            myChallengeStatus={myChallengeStatus!}
+          />
+        )}
+        {selectedMiddleBar == "Total" && (
+          <Total userChallengeId={userChallengeId} />
+        )}
+        {selectedMiddleBar == "About" && (
+          <About challengeId={myChallengeStatus?.challengeId as string} />
+        )}
       </ChallengeContainer>
       {isImageUploaded ? (
         <GrayFixedButton>Mission Completed</GrayFixedButton>
@@ -89,32 +129,52 @@ const IndividualMyChallengeOngoing = () => {
 
 export default IndividualMyChallengeOngoing;
 
-const My = (isImageUploaded: boolean) => {
+const My = ({
+  myChallengeStatus,
+  isImageUploaded,
+}: {
+  myChallengeStatus: MyStatusProps;
+  isImageUploaded: boolean;
+}) => {
   return (
     <>
       <StatusTitle>My Status</StatusTitle>
       <MyStatusWrapper>
         <MyStatusSmallTitle index={0}>My Success Rate</MyStatusSmallTitle>
-        <MyStautsSmallContent index={0}>100%</MyStautsSmallContent>
+        <MyStautsSmallContent index={0}>
+          {myChallengeStatus?.successRate}%
+        </MyStautsSmallContent>
         <MyStatusSmallTitle index={1}>Target Success</MyStatusSmallTitle>
         <MyStautsSmallContent index={1}>100%</MyStautsSmallContent>
-        <ProgressBar percentage={SUCCESS_RATE}></ProgressBar>
+        <ProgressBar percentage={myChallengeStatus?.successRate}></ProgressBar>
       </MyStatusWrapper>
       <MyStatusWrapper>
         <MyStatusSmallTitle index={0}>Your Deposit</MyStatusSmallTitle>
-        <MyStautsSmallContent index={0}>$100</MyStautsSmallContent>
+        <MyStautsSmallContent index={0}>
+          ${myChallengeStatus?.deposit}
+        </MyStautsSmallContent>
         <MyStatusSmallTitle index={1}>Availability</MyStatusSmallTitle>
         {isImageUploaded ? (
           <MyStautsSmallContent index={1}>Completed</MyStautsSmallContent>
         ) : (
-          <MyStautsSmallContent index={1}>23h 55m 50s</MyStautsSmallContent>
+          <MyStautsSmallContent index={1}>Not Completed</MyStautsSmallContent>
         )}
       </MyStatusWrapper>
     </>
   );
 };
 
-const Total = () => {
+const Total = ({ userChallengeId }: { userChallengeId: string }) => {
+  const [myChallengeTotalStatus, setMyChallengeTotalStatus] =
+    useState<TotalStatusProps>();
+  useEffect(() => {
+    const fetchData = async () => {
+      setMyChallengeTotalStatus(
+        await getMyChallengeTotalStatus(userChallengeId as string)
+      );
+    };
+    fetchData();
+  }, [userChallengeId]); // challengeId가 변경될 때마다 useEffect 실행
   return (
     <>
       <StatusTitle>Total Status</StatusTitle>
@@ -122,11 +182,15 @@ const Total = () => {
         <TotalStatusSmallTitle index={0}>
           Total Crypto Deposit
         </TotalStatusSmallTitle>
-        <TotalStautsSmallContent index={0}>$1,500</TotalStautsSmallContent>
+        <TotalStautsSmallContent index={0}>
+          ${myChallengeTotalStatus?.challengeCryptoDeposit}
+        </TotalStautsSmallContent>
         <TotalStatusSmallTitle index={1}>
           Crypto Yield Boost
         </TotalStatusSmallTitle>
-        <TotalStautsSmallContent index={1}>+$0.05</TotalStautsSmallContent>
+        <TotalStautsSmallContent index={1}>
+          +${myChallengeTotalStatus?.cryptoYieldBoost}
+        </TotalStautsSmallContent>
       </TotalStatusWrapperGradient>
       <TotalStatusTwoBlocksWrapper>
         <TotalStatusWrapperOneOfTwoBlocks>
@@ -134,7 +198,7 @@ const Total = () => {
             Over 80% Pool
           </TotalStatusSmallTitleOneOfTwoBlocks>
           <TotalStautsSmallContentOneOfTwoBlocks>
-            $1,500
+            ${myChallengeTotalStatus?.cryptoSuccessPool}
           </TotalStautsSmallContentOneOfTwoBlocks>
         </TotalStatusWrapperOneOfTwoBlocks>
         <TotalStatusWrapperOneOfTwoBlocks>
@@ -142,7 +206,7 @@ const Total = () => {
             Undere 80% Pool
           </TotalStatusSmallTitleOneOfTwoBlocks>
           <TotalStautsSmallContentOneOfTwoBlocks>
-            $0
+            ${myChallengeTotalStatus?.cryptoFailPool}
           </TotalStautsSmallContentOneOfTwoBlocks>
         </TotalStatusWrapperOneOfTwoBlocks>
       </TotalStatusTwoBlocksWrapper>
@@ -150,17 +214,36 @@ const Total = () => {
         <TotalStatusSmallTitle index={0}>
           Total Cash Deposit
         </TotalStatusSmallTitle>
-        <TotalStautsSmallContent index={0}>$2,300</TotalStautsSmallContent>
+        <TotalStautsSmallContent index={0}>
+          ${myChallengeTotalStatus?.challengeTotalDeposit}
+        </TotalStautsSmallContent>
       </TotalStatusWrapperLightPurple>
     </>
   );
 };
 
-const About = () => {
+const About = ({ challengeId }: { challengeId: string }) => {
+  const [challengeInfo, setChallengeInfo] = useState<ChallengeByIdProps>();
+  useEffect(() => {
+    const fetchData = async () => {
+      setChallengeInfo(await getChallengeInfo(challengeId as string));
+    };
+    fetchData();
+  }, []); // challengeId가 변경될 때마다 useEffect 실행
   return (
     <>
       <StatusTitle>Info</StatusTitle>
-      <ChallengeInfoTable />
+      <ChallengeInfoTable
+        challengeStartsAt={challengeInfo?.challengeStartsAt as string}
+        challengeEndsAt={challengeInfo?.challengeEndsAt as string}
+        challengeVerificationMethod={
+          challengeInfo?.challengeVerificationMethod as string
+        }
+        challengeVerificationFrequency={
+          challengeInfo?.challengeVerificationFrequency as string
+        }
+        cryptoYield={challengeInfo?.cryptoYield as number}
+      />
       <StatusTitle>Description</StatusTitle>
       <Description>Snap your scale!!</Description>
     </>

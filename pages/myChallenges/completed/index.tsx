@@ -82,6 +82,7 @@ const MyChallengesCompleted = () => {
           <MyChallenge
             key={myChallenge.userChallengeId}
             myChallenge={myChallenge}
+            isPaybackReceived={isPaybackReceived}
           />
         ))}
       </Container>
@@ -91,9 +92,10 @@ const MyChallengesCompleted = () => {
 
 export default MyChallengesCompleted;
 
-const MyChallenge: React.FC<{ myChallenge: MyStatusProps }> = ({
-  myChallenge,
-}) => {
+const MyChallenge: React.FC<{
+  myChallenge: MyStatusProps;
+  isPaybackReceived: boolean;
+}> = ({ myChallenge, isPaybackReceived }) => {
   const router = useRouter();
   const userChallengeId = myChallenge.userChallengeId;
   return (
@@ -113,7 +115,7 @@ const MyChallenge: React.FC<{ myChallenge: MyStatusProps }> = ({
             myChallenge?.challengeStartsAt as string
           )}
         </MyChallengeDuration>
-        {isPaybackReceivedState ? (
+        {isPaybackReceived ? (
           <GrayButton
             onClick={() => {
               router.push(`/myChallenges/completed/${userChallengeId}`);

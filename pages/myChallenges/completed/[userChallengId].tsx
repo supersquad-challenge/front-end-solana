@@ -15,17 +15,12 @@ import {
 import { colors } from "../../../src/lib/colors";
 import ChallengeInfoTable from "../../../src/ChallengeInfoTable";
 import { useRecoilState } from "recoil";
-import {
-  isImageUploadedState,
-  isPaybackReceivedState,
-} from "../../../src/lib/states";
+import { isPaybackReceivedState } from "../../../src/lib/states";
 import { useRouter } from "next/router";
 import { getMyChallengeTotalStatus } from "../../../src/api/totalStatus";
 import { getMyChallengeStatus } from "../../../src/api/myStatus";
 import { daysBetweenDates } from "../../../src/lib/dates";
 import { getChallengeInfo } from "../../../src/api/challengeById";
-
-const SUCCESS_RATE = 40;
 
 const IndividualMyChallengeCompleted = () => {
   const [selectedMiddleBar, setSelctedMiddleBar] = useState("My");
@@ -34,8 +29,8 @@ const IndividualMyChallengeCompleted = () => {
   const [isPaybackReceived, setIsPaybackReceived] = useRecoilState(
     isPaybackReceivedState
   );
-  const [myChallengeStatus, setMyChallengeStatus] = useState<MyStatusProps>();
 
+  const [myChallengeStatus, setMyChallengeStatus] = useState<MyStatusProps>();
   const router = useRouter();
   const asPath = router.asPath;
   const parts = asPath.split("/");
@@ -76,8 +71,12 @@ const IndividualMyChallengeCompleted = () => {
             display: "flex",
           }}
         >
-          <ChallengeParticipants>30 Paticipants</ChallengeParticipants>
-          <ChallengeTotalDeposit>$6000</ChallengeTotalDeposit>
+          <ChallengeParticipants>
+            {myChallengeStatus?.challengeParticipantsCount} Paticipants
+          </ChallengeParticipants>
+          <ChallengeTotalDeposit>
+            ${myChallengeStatus?.challengeTotalDeposit}
+          </ChallengeTotalDeposit>
         </div>
         <MiddleBarContainer>
           <MiddleBarWrapper
@@ -149,7 +148,6 @@ const My = ({
   myChallengeStatus: MyStatusProps;
   isPaybackReceived: boolean;
 }) => {
-  console.log(myChallengeStatus);
   return (
     <>
       <StatusTitle>My Status</StatusTitle>

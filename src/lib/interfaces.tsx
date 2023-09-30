@@ -67,6 +67,8 @@ export interface MyStatusProps {
   challengeEndsAt: string;
   challengeName: string;
   challengeId: string;
+  challengeParticipantsCount: number;
+  challengeTotalDeposit: number;
 }
 
 export interface TotalStatusProps {
