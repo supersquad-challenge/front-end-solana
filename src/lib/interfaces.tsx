@@ -66,4 +66,16 @@ export interface MyStatusProps {
   challengeStartsAt: string;
   challengeEndsAt: string;
   challengeName: string;
+  challengeId: string;
+}
+
+export interface TotalStatusProps {
+  cashFailPool: number;
+  cashSuccessPool: number;
+  challengeCryptoDeposit: number;
+  challengeId: string;
+  challengeTotalDeposit: number;
+  cryptoFailPool: number;
+  cryptoSuccessPool: number;
+  cryptoYieldBoost: number;
 }

@@ -20,7 +20,7 @@ export const getMyChallengeStatus = async (userChallengeId: string) => {
     const response = await axios.get(url);
 
     if (response.status === 200) {
-      console.log("My status found:", response.data.myStatus);
+      // console.log("My status found:", response.data.myStatus);
       return response.data.myStatus;
     }
   } catch (error) {
