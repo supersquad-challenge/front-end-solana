@@ -50,16 +50,11 @@ const MyChallengesOnApplication = () => {
     const statuses = await Promise.all(statusPromises);
 
     statuses.forEach((status) => addObject(status));
-    console.log(allMyChallenges);
   };
 
   useEffect(() => {
     fetchData();
   }, []); // dependency 배열
-
-  useEffect(() => {
-    console.log(allMyChallenges);
-  }, [allMyChallenges]); // allMyChallenges가 변경될 때마다 로그 출력
 
   return (
     <>

@@ -4,6 +4,7 @@ const nextConfig = {
   swcMinify: true,
   env: {
     API_BASE_URL: process.env.API_BASE_URL,
+    GOOGLE_LOGIN_URL: process.env.GOOGLE_LOGIN_URL,
   },
   async redirects() {
     return [

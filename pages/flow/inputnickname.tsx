@@ -2,7 +2,6 @@
 import styled from "styled-components";
 import React, { useState } from "react";
 import { useRouter } from "next/router";
-import GoogleSignIn from "../../src/GoogleSignIn";
 import { colors } from "../../src/lib/colors";
 
 export default function InputNickname() {

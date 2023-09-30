@@ -1,4 +1,7 @@
 import { atom, RecoilState } from "recoil";
+import { recoilPersist } from "recoil-persist";
+
+const { persistAtom } = recoilPersist();
 
 export const isImageUploadedState = atom<boolean>({
   key: "IsImageUploadedState",
@@ -15,10 +18,10 @@ export const paymentMethodState = atom<string>({
   default: "",
 });
 
-export const isSignedInState = atom<boolean>({
-  /////여기 바꿔서
+export const isSignedInState = atom({
   key: "IsSignedInState",
   default: false,
+  effects_UNSTABLE: [persistAtom],
 });
 
 export const isPaidWithCrpytoState = atom<boolean>({

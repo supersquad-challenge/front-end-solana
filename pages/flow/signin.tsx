@@ -1,7 +1,13 @@
 import styled from "styled-components";
 import React, { useState } from "react";
 import { useRouter } from "next/router";
-import GoogleSignIn from "../../src/GoogleSignIn";
+import dotenv from "dotenv";
+import { useRecoilState } from "recoil";
+import { isSignedInState } from "../../src/lib/states";
+
+dotenv.config();
+
+const GOOGLE_LOGIN_URL = process.env.GOOGLE_LOGIN_URL;
 
 export default function Login() {
   const router = useRouter();
@@ -47,9 +53,34 @@ const SignUpNSignInWithGoogle = styled.div`
     width: 345px;
 
     margin-top: 40px;
-    margin-bottom: 70px;
+    margin-bottom: 50px;
   }
 
   /* border: 1px solid black;
   box-sizing: border-box; */
+`;
+
+const GoogleSignIn: React.FC = () => {
+  const [isSignedIn, setIsSignedIn] = useRecoilState(isSignedInState);
+  return (
+    <GoogleButtonWrapper>
+      <img
+        src="/pages/flow/connectwallet/btn_google_signin_light_normal_web@2x.png"
+        alt="googleSignIn"
+        width={300}
+        onClick={() => {
+          setIsSignedIn(true);
+          console.log(isSignedIn);
+          console.log("안녕");
+          window.location.href = GOOGLE_LOGIN_URL!; // 외부 URL로 이동
+        }}
+      />
+    </GoogleButtonWrapper>
+  );
+};
+
+const GoogleButtonWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;

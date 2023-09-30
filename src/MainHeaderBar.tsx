@@ -35,9 +35,7 @@ const MainHeaderBar = () => {
   ).includes(router.pathname)
     ? router.pathname
     : null; //string
-
-  /////상황별로 다르게 쓸 수 있음. /////
-
+  // console.log(isSignedIn);
   const Logo_DifferBySignIn = () => {
     return (
       <Container>
@@ -51,7 +49,13 @@ const MainHeaderBar = () => {
             />
           </>
         ) : (
-          <SignInButton>Sign In</SignInButton>
+          <SignInButton
+            onClick={() => {
+              router.push("/flow/signin");
+            }}
+          >
+            Sign In
+          </SignInButton>
         )}
       </Container>
     );
@@ -78,7 +82,13 @@ const MainHeaderBar = () => {
             />
           </>
         ) : (
-          <SignInButton>Sign In</SignInButton>
+          <SignInButton
+            onClick={() => {
+              router.push("/flow/signin");
+            }}
+          >
+            Sign In
+          </SignInButton>
         )}
       </Container>
     );
@@ -116,7 +126,13 @@ const MainHeaderBar = () => {
             />
           </>
         ) : (
-          <SignInButton>Sign In</SignInButton>
+          <SignInButton
+            onClick={() => {
+              router.push("/flow/signin");
+            }}
+          >
+            Sign In
+          </SignInButton>
         )}
       </Container>
     );
