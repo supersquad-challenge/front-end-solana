@@ -81,3 +81,11 @@ export interface TotalStatusProps {
   cryptoSuccessPool: number;
   cryptoYieldBoost: number;
 }
+
+export interface PaybackStatusProps {
+  successRate: number;
+  totalPayback: number;
+  profit: number;
+  challengeReward: number;
+  cryptoYieldBoost: number;
+}

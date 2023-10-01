@@ -10,6 +10,11 @@ import {
 } from "../../src/lib/states";
 import AfterPayment from "../../src/page/flow/AfterPayment";
 import { registerMyChallenge } from "../../src/api/myChallengeRegister";
+import { Xumm } from "xumm";
+import dotenv from "dotenv";
+
+dotenv.config();
+const XUMM_API_KEY = process.env.XUMM_API_KEY;
 
 export default function ConnectWallet() {
   const [isPaidWithCrypto, setIsPaidWithCrypto] = useRecoilState(
@@ -24,6 +29,7 @@ export default function ConnectWallet() {
     // challengeId가 string 타입인지 확인
     registerMyChallenge(userInfoId, registerChallengeId);
   }
+  console.log(XUMM_API_KEY);
 
   return isPaidWithCrypto ? (
     <AfterPayment />
@@ -38,10 +44,33 @@ interface PayingWithCryptoProps {
 
 //지갑을 연결하는 페이지
 const PayingWithCrypto = ({ setIsPaidWithCrypto }: PayingWithCryptoProps) => {
+  try {
+    const xumm = new Xumm(process.env.XUMM_API_KEY!);
+    // rest of your code
+  } catch (error) {
+    console.error("An error occurred:", error);
+  }
+  const [address, setAddress] = useState<string | undefined>("");
   return (
     <Container>
       <ContinueWith>Continue With</ContinueWith>
       <CustomWallet>
+        <div
+          style={{ display: "flex", alignItems: "center" }}
+          onClick={async () => {
+            const res: any = await xumm.authorize();
+            console.log(res);
+            const account = res.me.account;
+            console.log(account);
+            setAddress(account);
+          }}
+        >
+          <WalletImg src="/pages/flow/connectwallet/xumm.jpeg" />
+          <WalletName>Xumm</WalletName>
+        </div>
+      </CustomWallet>
+
+      {/* <CustomWallet>
         <div style={{ display: "flex", alignItems: "center" }}>
           <WalletImg src="/pages/flow/connectwallet/metamask.svg" />
           <WalletName>Metamask</WalletName>
@@ -52,7 +81,7 @@ const PayingWithCrypto = ({ setIsPaidWithCrypto }: PayingWithCryptoProps) => {
           <WalletImg src="/pages/flow/connectwallet/walletConnect.svg" />
           <WalletName>WalletConnect</WalletName>
         </div>
-      </CustomWallet>
+      </CustomWallet> */}
       <BlackButton
         onClick={() => {
           setIsPaidWithCrypto(true);
@@ -131,6 +160,7 @@ const WalletImg = styled.img`
     //mobile
     width: 22px;
     height: 22px;
+    border-radius: 8px;
   }
 
   /* border: 1px solid black;

@@ -27,7 +27,8 @@
     "recoil-persist": "^5.1.0",
     "styled-components": "^6.0.7",
     "styled-reset": "^4.5.1",
-    "typescript": "5.2.2"
+    "typescript": "5.2.2",
+    "xumm": "^1.6.4"
   },
   "devDependencies": {
     "@types/node": "18.11.9",

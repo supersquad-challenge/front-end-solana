@@ -10,6 +10,7 @@ import {
   MyStatusProps,
   TotalStatusProps,
   ChallengeByIdProps,
+  PaybackStatusProps,
 } from "../../../src/lib/interfaces";
 
 import { colors } from "../../../src/lib/colors";
@@ -21,6 +22,8 @@ import { getMyChallengeTotalStatus } from "../../../src/api/totalStatus";
 import { getMyChallengeStatus } from "../../../src/api/myStatus";
 import { daysBetweenDates } from "../../../src/lib/dates";
 import { getChallengeInfo } from "../../../src/api/challengeById";
+import PaybackInfoTable from "../../../src/PaybackInfoTable";
+import getPaybackInfo from "../../../src/api/paybackStatus";
 
 const IndividualMyChallengeCompleted = () => {
   const [selectedMiddleBar, setSelctedMiddleBar] = useState("My");
@@ -45,7 +48,9 @@ const IndividualMyChallengeCompleted = () => {
     fetchData();
   }, [userChallengeId]); // challengeId가 변경될 때마다 useEffect 실행
 
-  return (
+  return isGetPaybackButtonClicked ? (
+    <PaybackInfo userChallengeId={userChallengeId} />
+  ) : (
     <Container heightType={selectedMiddleBar}>
       <ChallengeThumbnailImage
         src="/pages/challenges/diet/miracleMorningEx.svg"
@@ -263,13 +268,26 @@ const About = ({ challengeId }: { challengeId: string }) => {
   );
 };
 
-const PaybackInfo = () => {
+const PaybackInfo = ({ userChallengeId }: { userChallengeId: string }) => {
   const router = useRouter();
+  const [paybackInfo, setPaybackInfo] = useState<PaybackStatusProps>();
+  const fetchData = async () => {
+    const data = await getPaybackInfo(userChallengeId as string);
+    setPaybackInfo(data!);
+  };
+  useEffect(() => {
+    fetchData();
+  }, []);
+
   return (
     <PaybackInfoContainer>
       <CheckImage src="/pages/proove/diet/purpleCheck.svg" alt="prooveCheck" />
-      <ProoveTitle>Now you are in!</ProoveTitle>
-      <ProoveDetail>Be ready to enforce goals and earn</ProoveDetail>
+      <PaybackSmallDetail>You have completed</PaybackSmallDetail>
+      <PaybackBigDetail>{paybackInfo?.successRate}%</PaybackBigDetail>
+      <PaybackSmallDetail>of the challenge!</PaybackSmallDetail>
+      <PaybackInfoTable paybackInfo={paybackInfo!} />
+      <PaybackInfoButton index={1}>Claim Crypto</PaybackInfoButton>
+      <PaybackInfoButton index={2}>Claim Cash</PaybackInfoButton>
     </PaybackInfoContainer>
   );
 };
@@ -303,11 +321,11 @@ const CheckImage = styled.img`
     //mobile
     width: 48px;
     height: 48px;
-    margin-top: 180px;
+    margin-top: 30px;
   }
 `;
 
-const ProoveTitle = styled.div`
+const PaybackBigDetail = styled.div`
   /* @media (max-width: 2160px) {
     //PC
   } */
@@ -316,9 +334,9 @@ const ProoveTitle = styled.div`
     width: 261px;
     margin-top: 20px;
 
-    font-size: 24px;
+    font-size: 48px;
   }
-  font-weight: 600;
+  font-weight: 800;
   color: #121212;
 
   display: flex;
@@ -327,13 +345,13 @@ const ProoveTitle = styled.div`
   text-align: center;
 `;
 
-const ProoveDetail = styled.div`
+const PaybackSmallDetail = styled.div`
   /* @media (max-width: 2160px) {
     //PC
   } */
   @media (max-width: 576px) {
     //mobile
-    margin-top: 5px;
+    margin-top: 20px;
     width: 261px;
 
     font-size: 14px;
@@ -870,4 +888,36 @@ const Description = styled.div`
     font-size: 16px;
     font-weight: 400;
   }
+`;
+
+const PaybackInfoButton = styled.div<IndexProps>`
+  /* @media (max-width: 2160px) {
+    //PC
+  } */
+  @media (max-width: 576px) {
+    width: 343px;
+    height: 60px;
+
+    border-radius: 20px;
+
+    margin-top: 10px;
+
+    border: ${(props) => props.index == 2 && `1px solid ${colors.black}`};
+  }
+
+  background-color: ${(props) => props.index == 1 && `${colors.black}`};
+  color: ${(props) => props.index == 1 && "white"};
+
+  background-color: ${(props) => props.index == 2 && "white"};
+  color: ${(props) => props.index == 2 && `${colors.black}`};
+
+  box-sizing: border-box;
+
+  font-weight: 500;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  text-align: center;
 `;
