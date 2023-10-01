@@ -69,9 +69,12 @@ const PayingWithCrypto = ({ setIsPaidWithCrypto }: PayingWithCryptoProps) => {
           onClick={async () => {
             const res: any = await xumm.authorize();
             console.log(res);
-            const account = res.me.account;
-            console.log(account);
-            setAddress(account);
+            setIsPaidWithCrypto(true);
+
+            // const account = res.me.account;
+            // console.log(account);
+
+            // setAddress(account);
           }}
         >
           <WalletImg src="/pages/flow/connectwallet/xumm.jpeg" />
@@ -91,13 +94,13 @@ const PayingWithCrypto = ({ setIsPaidWithCrypto }: PayingWithCryptoProps) => {
           <WalletName>WalletConnect</WalletName>
         </div>
       </CustomWallet> */}
-      <BlackButton
+      {/* <BlackButton
         onClick={() => {
           setIsPaidWithCrypto(true);
         }}
       >
         temporary button for after Payment
-      </BlackButton>
+      </BlackButton> */}
     </Container>
   );
 };

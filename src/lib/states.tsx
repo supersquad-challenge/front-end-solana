@@ -32,6 +32,7 @@ export const isPaidWithCrpytoState = atom<boolean>({
 export const isPaybackReceivedState = atom<boolean>({
   key: "IsPaybackReceivedState",
   default: false,
+  effects_UNSTABLE: [persistAtom],
 });
 
 export const userInfoIdState = atom<string>({

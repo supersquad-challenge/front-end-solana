@@ -4,10 +4,15 @@ import styled from "styled-components";
 import React from "react";
 import { useRouter } from "next/router";
 import { IsClickedProps } from "./lib/interfaces";
+import { useRecoilState } from "recoil";
+import { isPaybackReceivedState } from "./lib/states";
 
 const NavigationBar = () => {
   const router = useRouter();
   const { pathname } = router;
+  const [isPaybackReceived, setIsPaybackReceived] = useRecoilState(
+    isPaybackReceivedState
+  );
   return (
     <Container>
       <NavigationBarContainer>
@@ -28,7 +33,13 @@ const NavigationBar = () => {
           <img src="/NavigationBar/flag1.svg" alt="flag" />
         </NavigationBarWrapper>
         <NavigationBarWrapper isClicked={false}>
-          <img src="/NavigationBar/user1.svg" alt="user" />
+          <img
+            src="/NavigationBar/user1.svg"
+            alt="user"
+            onClick={() => {
+              setIsPaybackReceived(false);
+            }}
+          />
         </NavigationBarWrapper>
       </NavigationBarContainer>
     </Container>

@@ -22,7 +22,7 @@ const nextConfig = {
       },
       {
         source: "/myChallenges",
-        destination: "/myChallenges/ongoing",
+        destination: "/myChallenges/onApplication",
         permanent: false,
       },
     ];
