@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { colors } from "../../src/lib/colors";
 import { SetterOrUpdater, useRecoilState } from "recoil";
@@ -14,7 +14,6 @@ import { Xumm } from "xumm";
 import dotenv from "dotenv";
 
 dotenv.config();
-const XUMM_API_KEY = process.env.XUMM_API_KEY;
 
 export default function ConnectWallet() {
   const [isPaidWithCrypto, setIsPaidWithCrypto] = useRecoilState(
@@ -29,7 +28,6 @@ export default function ConnectWallet() {
     // challengeId가 string 타입인지 확인
     registerMyChallenge(userInfoId, registerChallengeId);
   }
-  console.log(XUMM_API_KEY);
 
   return isPaidWithCrypto ? (
     <AfterPayment />
@@ -44,13 +42,24 @@ interface PayingWithCryptoProps {
 
 //지갑을 연결하는 페이지
 const PayingWithCrypto = ({ setIsPaidWithCrypto }: PayingWithCryptoProps) => {
-  try {
-    const xumm = new Xumm(process.env.XUMM_API_KEY!);
-    // rest of your code
-  } catch (error) {
-    console.error("An error occurred:", error);
-  }
   const [address, setAddress] = useState<string | undefined>("");
+  const [appName, setAppName] = useState<string>("");
+
+  const XUMM_API_KEY = process.env.XUMM_API_KEY || "";
+  const XUMM_API_SECRET = process.env.XUMM_API_SECRET || "";
+
+  console.log(XUMM_API_KEY);
+  const xumm = new Xumm(XUMM_API_KEY, XUMM_API_SECRET);
+
+  useEffect(() => {
+    xumm.user.account.then((account) => {
+      setAddress(account ?? "");
+    });
+
+    xumm.environment.jwt?.then((j) => {
+      setAppName(j?.app_name ?? "");
+    });
+  }, []);
   return (
     <Container>
       <ContinueWith>Continue With</ContinueWith>

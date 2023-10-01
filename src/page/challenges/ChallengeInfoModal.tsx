@@ -1,10 +1,16 @@
 import styled from "styled-components";
 import DepositSlider from "../../DepositSlider";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { depositAmountState, paymentMethodState } from "../../lib/states";
+import {
+  depositAmountState,
+  paymentMethodState,
+  registerChallengeIdState,
+  userInfoIdState,
+} from "../../lib/states";
 import { IsOpenProps } from "../../lib/interfaces";
 import { useRouter } from "next/router";
 import depositFunds from "../../api/depositInfo";
+import getUserChallengeIdByUserInfoIdNChallengeId from "../../api/userChallengeId";
 
 interface ChallengeInfoModalProps {
   isChallengeInfoModalOpen: boolean;
@@ -22,12 +28,27 @@ const ChallengeInfoModal = ({
   const [depositAmount, setDepositAmount] = useRecoilState(depositAmountState);
   const calculatedDepositAmount = depositAmount * 10 ** 6;
 
+  const [userInfoId, setUserInfoId] = useRecoilState(userInfoIdState);
+  const [registerChallengeId, setRegisterChallengeId] = useRecoilState(
+    registerChallengeIdState
+  );
+
   const router = useRouter();
+
+  async function updateDeposit() {
+    router.push("/flow/connectwallet");
+    console.log(userInfoId);
+    console.log(registerChallengeId);
+    const userChallengId = await getUserChallengeIdByUserInfoIdNChallengeId(
+      userInfoId,
+      registerChallengeId
+    );
+    await depositFunds(userChallengId, depositAmount);
+  }
 
   const handleChargeDepositButtonClick = () => {
     if (paymentMethod == "crypto") {
-      router.push("/flow/connectwallet");
-      // depositFunds(depositAmount);
+      updateDeposit();
     }
     // else if (paymentMethod=="cash") //여기에 이제 payment 붙여야 함
   };

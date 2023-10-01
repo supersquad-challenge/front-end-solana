@@ -31,9 +31,6 @@ const IndividualChallenge = () => {
   const [registerChallengeId, setRegisterChallengeId] = useRecoilState(
     registerChallengeIdState
   );
-  const [registerUserChallengeId, setRegisterUserChallengeId] = useRecoilState(
-    registerUserChallengeIdState
-  );
 
   const [isChallengeInfoModalOpen, setIsChallengeInfoModalOpen] =
     useState(false);
