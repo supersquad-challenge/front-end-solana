@@ -32,6 +32,7 @@ const IndividualMyChallengeCompleted = () => {
   const [isPaybackReceived, setIsPaybackReceived] = useRecoilState(
     isPaybackReceivedState
   );
+  const [isClaimed, setIsClaimed] = useState(false);
 
   const [myChallengeStatus, setMyChallengeStatus] = useState<MyStatusProps>();
   const router = useRouter();
@@ -48,99 +49,108 @@ const IndividualMyChallengeCompleted = () => {
     fetchData();
   }, [userChallengeId]); // challengeId가 변경될 때마다 useEffect 실행
 
-  return isGetPaybackButtonClicked ? (
-    <PaybackInfo userChallengeId={userChallengeId} />
+  return isClaimed ? (
+    <AfterClaim />
   ) : (
-    <Container heightType={selectedMiddleBar}>
-      <ChallengeThumbnailImage
-        src="/pages/challenges/diet/miracleMorningEx.svg"
-        alt="miracleMorningChallengeThumbnail"
-      />
-      <TagsContainer>
-        <TagWrapper backgroundColor="#ECECEC">
-          {myChallengeStatus?.challengeVerificationFrequency}
-        </TagWrapper>
-        <TagWrapper backgroundColor="#D6C0F0">
-          {daysBetweenDates(
-            myChallengeStatus?.challengeEndsAt as string,
-            myChallengeStatus?.challengeStartsAt as string
-          )}
-        </TagWrapper>
-      </TagsContainer>
-      <ChallengeContainer heightType={selectedMiddleBar}>
-        <ChallengeTitle>{myChallengeStatus?.challengeName}</ChallengeTitle>
-        <div
-          style={{
-            marginTop: "5px",
-            width: "345px",
-            display: "flex",
-          }}
-        >
-          <ChallengeParticipants>
-            {myChallengeStatus?.challengeParticipantsCount} Paticipants
-          </ChallengeParticipants>
-          <ChallengeTotalDeposit>
-            ${myChallengeStatus?.challengeTotalDeposit}
-          </ChallengeTotalDeposit>
-        </div>
-        <MiddleBarContainer>
-          <MiddleBarWrapper
-            isClicked={selectedMiddleBar === "My"}
-            onClick={() => {
-              setSelctedMiddleBar("My");
-            }}
-          >
-            My
-          </MiddleBarWrapper>
-          <MiddleBarWrapper
-            isClicked={selectedMiddleBar === "Total"}
-            onClick={() => {
-              setSelctedMiddleBar("Total");
-            }}
-          >
-            Total
-          </MiddleBarWrapper>
-          <MiddleBarWrapper
-            isClicked={selectedMiddleBar === "About"}
-            onClick={() => {
-              setSelctedMiddleBar("About");
-            }}
-          >
-            About
-          </MiddleBarWrapper>
-        </MiddleBarContainer>
-        {selectedMiddleBar == "My" && (
-          <My
-            myChallengeStatus={myChallengeStatus!}
-            isPaybackReceived={isPaybackReceived}
-          />
-        )}
-        {selectedMiddleBar == "Total" && (
-          <Total userChallengeId={userChallengeId} />
-        )}
-        {selectedMiddleBar == "About" && (
-          <About challengeId={myChallengeStatus?.challengeId as string} />
-        )}
-      </ChallengeContainer>
-      {isPaybackReceived ? (
-        <BlackFixedButton
-          onClick={() => {
-            router.push("/home");
-          }}
-        >
-          Next Challenge
-        </BlackFixedButton>
+    <>
+      {isGetPaybackButtonClicked ? (
+        <PaybackInfo
+          userChallengeId={userChallengeId}
+          setIsClaimed={setIsClaimed}
+        />
       ) : (
-        <PurpleFixedButton
-          onClick={() => {
-            setIsPaybackReceived(true); //분배 로직은 여기에 더하면 됨.
-            setIsGetPaybackButtonClicked(true);
-          }}
-        >
-          Get Payback
-        </PurpleFixedButton>
+        <Container heightType={selectedMiddleBar}>
+          <ChallengeThumbnailImage
+            src="/pages/challenges/diet/miracleMorningEx.svg"
+            alt="miracleMorningChallengeThumbnail"
+          />
+          <TagsContainer>
+            <TagWrapper backgroundColor="#ECECEC">
+              {myChallengeStatus?.challengeVerificationFrequency}
+            </TagWrapper>
+            <TagWrapper backgroundColor="#D6C0F0">
+              {daysBetweenDates(
+                myChallengeStatus?.challengeEndsAt as string,
+                myChallengeStatus?.challengeStartsAt as string
+              )}
+            </TagWrapper>
+          </TagsContainer>
+          <ChallengeContainer heightType={selectedMiddleBar}>
+            <ChallengeTitle>{myChallengeStatus?.challengeName}</ChallengeTitle>
+            <div
+              style={{
+                marginTop: "5px",
+                width: "345px",
+                display: "flex",
+              }}
+            >
+              <ChallengeParticipants>
+                {myChallengeStatus?.challengeParticipantsCount} Paticipants
+              </ChallengeParticipants>
+              <ChallengeTotalDeposit>
+                ${myChallengeStatus?.challengeTotalDeposit}
+              </ChallengeTotalDeposit>
+            </div>
+            <MiddleBarContainer>
+              <MiddleBarWrapper
+                isClicked={selectedMiddleBar === "My"}
+                onClick={() => {
+                  setSelctedMiddleBar("My");
+                }}
+              >
+                My
+              </MiddleBarWrapper>
+              <MiddleBarWrapper
+                isClicked={selectedMiddleBar === "Total"}
+                onClick={() => {
+                  setSelctedMiddleBar("Total");
+                }}
+              >
+                Total
+              </MiddleBarWrapper>
+              <MiddleBarWrapper
+                isClicked={selectedMiddleBar === "About"}
+                onClick={() => {
+                  setSelctedMiddleBar("About");
+                }}
+              >
+                About
+              </MiddleBarWrapper>
+            </MiddleBarContainer>
+            {selectedMiddleBar == "My" && (
+              <My
+                myChallengeStatus={myChallengeStatus!}
+                isPaybackReceived={isPaybackReceived}
+              />
+            )}
+            {selectedMiddleBar == "Total" && (
+              <Total userChallengeId={userChallengeId} />
+            )}
+            {selectedMiddleBar == "About" && (
+              <About challengeId={myChallengeStatus?.challengeId as string} />
+            )}
+          </ChallengeContainer>
+          {isPaybackReceived ? (
+            <BlackFixedButton
+              onClick={() => {
+                router.push("/home");
+              }}
+            >
+              Next Challenge
+            </BlackFixedButton>
+          ) : (
+            <PurpleFixedButton
+              onClick={() => {
+                setIsPaybackReceived(true); //분배 로직은 여기에 더하면 됨.
+                setIsGetPaybackButtonClicked(true);
+              }}
+            >
+              Get Payback
+            </PurpleFixedButton>
+          )}
+        </Container>
       )}
-    </Container>
+    </>
   );
 };
 
@@ -268,8 +278,13 @@ const About = ({ challengeId }: { challengeId: string }) => {
   );
 };
 
-const PaybackInfo = ({ userChallengeId }: { userChallengeId: string }) => {
-  const router = useRouter();
+const PaybackInfo = ({
+  userChallengeId,
+  setIsClaimed,
+}: {
+  userChallengeId: string;
+  setIsClaimed: React.Dispatch<React.SetStateAction<boolean>>;
+}) => {
   const [paybackInfo, setPaybackInfo] = useState<PaybackStatusProps>();
   const fetchData = async () => {
     const data = await getPaybackInfo(userChallengeId as string);
@@ -280,19 +295,62 @@ const PaybackInfo = ({ userChallengeId }: { userChallengeId: string }) => {
   }, []);
 
   return (
-    <PaybackInfoContainer>
+    <IncludingCheckImgContainer>
       <CheckImage src="/pages/proove/diet/purpleCheck.svg" alt="prooveCheck" />
       <PaybackSmallDetail>You have completed</PaybackSmallDetail>
       <PaybackBigDetail>{paybackInfo?.successRate}%</PaybackBigDetail>
       <PaybackSmallDetail>of the challenge!</PaybackSmallDetail>
       <PaybackInfoTable paybackInfo={paybackInfo!} />
-      <PaybackInfoButton index={1}>Claim Crypto</PaybackInfoButton>
-      <PaybackInfoButton index={2}>Claim Cash</PaybackInfoButton>
-    </PaybackInfoContainer>
+      <BlackWhiteButton
+        index={1}
+        onClick={() => {
+          setIsClaimed(true);
+        }}
+      >
+        Claim Crypto
+      </BlackWhiteButton>
+      <BlackWhiteButton
+        index={2}
+        onClick={() => {
+          setIsClaimed(true);
+        }}
+      >
+        Claim Cash
+      </BlackWhiteButton>
+    </IncludingCheckImgContainer>
   );
 };
 
-const PaybackInfoContainer = styled.div`
+const AfterClaim = () => {
+  const router = useRouter();
+  return (
+    <IncludingCheckImgContainer>
+      <CheckImageOfAfterClaim
+        src="/pages/proove/diet/purpleCheck.svg"
+        alt="prooveCheck"
+      />
+      <AfterClaimTitle>Congrats!</AfterClaimTitle>
+      <AfterClaimDetail>
+        Wait up to 24h for other members <br /> to complete the last mission
+        <br /> and calculate total reward
+      </AfterClaimDetail>
+      <BlackWhiteButton index={1} style={{ marginTop: "20px" }}>
+        Continue Diet Challenge
+      </BlackWhiteButton>
+      <BlackWhiteButton
+        index={2}
+        style={{ marginTop: "20px" }}
+        onClick={() => {
+          router.push("/home");
+        }}
+      >
+        Book Another Challenge
+      </BlackWhiteButton>
+    </IncludingCheckImgContainer>
+  );
+};
+
+const IncludingCheckImgContainer = styled.div`
   /* @media (max-width: 2160px) {
     //PC
   } */
@@ -890,7 +948,7 @@ const Description = styled.div`
   }
 `;
 
-const PaybackInfoButton = styled.div<IndexProps>`
+const BlackWhiteButton = styled.div<IndexProps>`
   /* @media (max-width: 2160px) {
     //PC
   } */
@@ -920,4 +978,57 @@ const PaybackInfoButton = styled.div<IndexProps>`
   align-items: center;
 
   text-align: center;
+`;
+
+const CheckImageOfAfterClaim = styled.img`
+  /* @media (max-width: 2160px) {
+    //PC
+  } */
+  @media (max-width: 576px) {
+    //mobile
+    width: 48px;
+    height: 48px;
+    margin-top: 180px;
+  }
+`;
+
+const AfterClaimTitle = styled.div`
+  /* @media (max-width: 2160px) {
+    //PC
+  } */
+  @media (max-width: 576px) {
+    //mobile
+    width: 261px;
+    margin-top: 20px;
+
+    font-size: 24px;
+  }
+  font-weight: 600;
+  color: #121212;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+`;
+
+const AfterClaimDetail = styled.div`
+  /* @media (max-width: 2160px) {
+    //PC
+  } */
+  @media (max-width: 576px) {
+    //mobile
+    margin-top: 10px;
+    width: 261px;
+
+    font-size: 14px;
+  }
+  font-weight: 500;
+  line-height: 1.5;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  white-space: pre-line;
 `;

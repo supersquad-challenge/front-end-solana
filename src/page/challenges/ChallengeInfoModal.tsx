@@ -4,6 +4,7 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import { depositAmountState, paymentMethodState } from "../../lib/states";
 import { IsOpenProps } from "../../lib/interfaces";
 import { useRouter } from "next/router";
+import depositFunds from "../../api/depositInfo";
 
 interface ChallengeInfoModalProps {
   isChallengeInfoModalOpen: boolean;
@@ -26,8 +27,9 @@ const ChallengeInfoModal = ({
   const handleChargeDepositButtonClick = () => {
     if (paymentMethod == "crypto") {
       router.push("/flow/connectwallet");
+      // depositFunds(depositAmount);
     }
-    // else if (paymentMethod=="cash") //여기에 이제 payement 붙여야 함
+    // else if (paymentMethod=="cash") //여기에 이제 payment 붙여야 함
   };
 
   return (

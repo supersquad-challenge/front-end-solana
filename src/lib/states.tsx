@@ -43,3 +43,8 @@ export const registerChallengeIdState = atom<string>({
   key: "RegisterchallengeIdState",
   default: "",
 });
+
+export const registerUserChallengeIdState = atom<string>({
+  key: "RegisterUserChallengeIdState",
+  default: "",
+});

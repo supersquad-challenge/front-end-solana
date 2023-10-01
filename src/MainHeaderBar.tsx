@@ -42,7 +42,13 @@ const MainHeaderBar = () => {
         <SuperSquad>SuperSquad</SuperSquad>
         {isSignedIn ? (
           <>
-            <ProfileImage src="/PageHeaderBar/profileEx.svg" alt="profileEx" />
+            <ProfileImage
+              src="/PageHeaderBar/profileEx.svg"
+              alt="profileEx"
+              onClick={() => {
+                setIsSignedIn(false);
+              }}
+            />
             <NotificationButton
               src="/PageHeaderBar/notification.svg"
               alt="notification"
@@ -75,7 +81,13 @@ const MainHeaderBar = () => {
 
         {isSignedIn ? (
           <>
-            <ProfileImage src="/PageHeaderBar/profileEx.svg" alt="profileEx" />
+            <ProfileImage
+              src="/PageHeaderBar/profileEx.svg"
+              alt="profileEx"
+              onClick={() => {
+                setIsSignedIn(false);
+              }}
+            />
             <NotificationButton
               src="/PageHeaderBar/notification.svg"
               alt="notification"
@@ -119,7 +131,13 @@ const MainHeaderBar = () => {
         <PageHeaderTitle>{title}</PageHeaderTitle>
         {isSignedIn ? (
           <>
-            <ProfileImage src="/PageHeaderBar/profileEx.svg" alt="profileEx" />
+            <ProfileImage
+              src="/PageHeaderBar/profileEx.svg"
+              alt="profileEx"
+              onClick={() => {
+                setIsSignedIn(false);
+              }}
+            />
             <NotificationButton
               src="/PageHeaderBar/notification.svg"
               alt="notification"

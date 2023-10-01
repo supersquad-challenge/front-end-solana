@@ -15,6 +15,7 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import {
   paymentMethodState,
   registerChallengeIdState,
+  registerUserChallengeIdState,
 } from "../../src/lib/states";
 import ChallengeInfoTable from "../../src/ChallengeInfoTable";
 import { useRouter } from "next/router";
@@ -29,6 +30,9 @@ const IndividualChallenge = () => {
 
   const [registerChallengeId, setRegisterChallengeId] = useRecoilState(
     registerChallengeIdState
+  );
+  const [registerUserChallengeId, setRegisterUserChallengeId] = useRecoilState(
+    registerUserChallengeIdState
   );
 
   const [isChallengeInfoModalOpen, setIsChallengeInfoModalOpen] =
