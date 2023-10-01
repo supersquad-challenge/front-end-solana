@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { colors } from "./lib/colors";
 import { useRecoilState } from "recoil";
@@ -30,6 +30,14 @@ const MainHeaderBar = () => {
     router.pathname.startsWith(path)
   ); //bool
 
+   const [isMounted, setIsMounted] = useState<boolean>(false);
+
+    useEffect(() => {
+      if (typeof window !== 'undefined') { 
+        setIsMounted(true);
+      }
+    }, [])
+
   const shouldShowNaviBarName = Object.keys(
     shouldShowNaviBarNameDBSIPath
   ).includes(router.pathname)
@@ -38,7 +46,9 @@ const MainHeaderBar = () => {
   // console.log(isSignedIn);
   const Logo_DifferBySignIn = () => {
     return (
-      <Container>
+      <>
+      {isMounted && (
+        <Container>
         <SuperSquad>SuperSquad</SuperSquad>
         {isSignedIn ? (
           <>
@@ -64,13 +74,23 @@ const MainHeaderBar = () => {
           </SignInButton>
         )}
       </Container>
+      )}
+      </>
     );
   };
 
   //Profile이 있다는 건 login을 했다는 것.
   const Back_DifferBySignIn = () => {
+    const [isMounted, setIsMounted] = useState<boolean>(false);
+
+      useEffect(() => {
+        if (typeof window !== 'undefined') { 
+          setIsMounted(true);
+        }
+      }, [])
     return (
-      <Container>
+      <>{isMounted && 
+        <Container>
         <GoBackButton
           src="/PageHeaderBar/chevron-left.svg"
           alt="goBack"
@@ -102,21 +122,35 @@ const MainHeaderBar = () => {
             Sign In
           </SignInButton>
         )}
-      </Container>
-    );
+      </Container>}
+      </>
+          );
   };
 
   const Back = () => {
+      const [isMounted, setIsMounted] = useState<boolean>(false);
+
+      useEffect(() => {
+        if (typeof window !== 'undefined') { 
+          setIsMounted(true);
+        }
+      }, [])
     return (
-      <Container>
-        <GoBackButton
-          src="/PageHeaderBar/chevron-left.svg"
-          alt="goBack"
-          onClick={() => {
-            router.push("/home");
-          }}
-        />
-      </Container>
+      <>
+        {isMounted && (
+          <Container>
+            <GoBackButton
+              src="/PageHeaderBar/chevron-left.svg"
+              alt="goBack"
+              onClick={() => {
+                router.push("/home");
+              }}
+            />
+          </Container>
+
+        )
+        }  
+      </>
     );
   };
   const NaviBarName_DifferBySignIn = ({
