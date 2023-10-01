@@ -15,7 +15,11 @@ import {
 import { colors } from "../../../src/lib/colors";
 import ChallengeInfoTable from "../../../src/ChallengeInfoTable";
 import { useRecoilState } from "recoil";
-import { isImageUploadedState } from "../../../src/lib/states";
+import {
+  isImageUploadedState,
+  registerChallengeIdState,
+  registerUserChallengeIdState,
+} from "../../../src/lib/states";
 import { useRouter } from "next/router";
 import { getMyChallengeStatus } from "../../../src/api/myStatus";
 import { daysBetweenDates } from "../../../src/lib/dates";
@@ -28,6 +32,9 @@ const IndividualMyChallengeOngoing = () => {
   const [selectedMiddleBar, setSelctedMiddleBar] = useState("My");
   const [isImageUploaded, setIsImageUploaded] =
     useRecoilState(isImageUploadedState);
+  const [registerUserChallengeId, setRegisterUserChallengeId] = useRecoilState(
+    registerUserChallengeIdState
+  );
 
   const [myChallengeStatus, setMyChallengeStatus] = useState<MyStatusProps>();
   const router = useRouter();
@@ -119,7 +126,12 @@ const IndividualMyChallengeOngoing = () => {
       {isImageUploaded ? (
         <GrayFixedButton>Mission Completed</GrayFixedButton>
       ) : (
-        <BlackFixedButton onClick={() => router.push("/proove/diet")}>
+        <BlackFixedButton
+          onClick={() => {
+            setRegisterUserChallengeId(userChallengeId!);
+            router.push("/proove/diet");
+          }}
+        >
           Complete Mission
         </BlackFixedButton>
       )}

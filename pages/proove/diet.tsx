@@ -2,12 +2,18 @@ import styled from "styled-components";
 import React, { useState } from "react";
 import UploadedImage from "../../src/UploadedImage";
 import { useRecoilState } from "recoil";
-import { isImageUploadedState } from "../../src/lib/states";
+import {
+  isImageUploadedState,
+  registerUserChallengeIdState,
+} from "../../src/lib/states";
 import { useRouter } from "next/router";
 
 const ProoveDiet = () => {
   const [isImageUploaded, setIsImageUploaded] =
     useRecoilState(isImageUploadedState);
+  const [registerUserChallengeId, setRegisterUserChallengeId] = useRecoilState(
+    registerUserChallengeIdState
+  );
 
   const router = useRouter();
   return (
@@ -29,7 +35,7 @@ const ProoveDiet = () => {
           <BlackButton
             onClick={() => {
               setIsImageUploaded(true);
-              router.push("/myChallenges/ongoing/diet");
+              router.push(`/myChallenges/ongoing/${registerUserChallengeId}`);
             }}
             style={{ marginTop: "30px" }}
           >

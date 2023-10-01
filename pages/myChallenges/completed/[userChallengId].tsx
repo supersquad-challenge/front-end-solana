@@ -288,6 +288,7 @@ const PaybackInfo = ({
   const [paybackInfo, setPaybackInfo] = useState<PaybackStatusProps>();
   const fetchData = async () => {
     const data = await getPaybackInfo(userChallengeId as string);
+    console.log(data);
     setPaybackInfo(data!);
   };
   useEffect(() => {

@@ -81,10 +81,11 @@ const MyChallenge: React.FC<{ myChallenge: MyStatusProps }> = ({
 }) => {
   const router = useRouter();
   const [isImageUploaded] = useRecoilState(isImageUploadedState);
+  const userChallengeId = myChallenge.userChallengeId;
   return (
     <MyChllengeWrapper
       onClick={() => {
-        router.push("/myChallenges/ongoing/diet");
+        router.push(`/myChallenges/ongoing/${userChallengeId}`);
       }}
     >
       <MyChallengeThumbnail src="/pages/myChallenges/dietExSmall.svg" />
