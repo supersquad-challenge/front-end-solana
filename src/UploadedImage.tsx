@@ -34,6 +34,7 @@ const UploadedImage = () => {
       }
       // updateRegisterHomeUpLoadFile(file);
       // updateRegisterHomeWholeInfo(file.name, 1);
+      // 주석
     }
   };
 
