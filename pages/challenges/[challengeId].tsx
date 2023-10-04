@@ -22,6 +22,7 @@ import { useRouter } from "next/router";
 import { getChallengeInfo } from "../../src/api/challengeById";
 import { daysBetweenDates } from "../../src/lib/dates";
 import AfterPayment from "../../src/page/flow/AfterPayment";
+import { getUserInfo } from "../../src/api/userInfo";
 
 //PaymentMethodModal => ChallengeInfoModal
 

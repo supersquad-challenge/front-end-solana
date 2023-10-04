@@ -4,7 +4,7 @@ import dotenv from "dotenv";
 dotenv.config();
 const API_BASE_URL = process.env.API_BASE_URL;
 
-export const getMyChallengeTotalStatus = async (userChallengeId: string) => {
+export const getUserInfo = async (userInfoId: string) => {
   try {
     // const config = {
     //   headers: {
@@ -13,12 +13,12 @@ export const getMyChallengeTotalStatus = async (userChallengeId: string) => {
     // };
 
     const response = await axios.get(
-      `${API_BASE_URL}/myChallenge/totalStatus/${userChallengeId}`
+      `${API_BASE_URL}/user/detail/${userInfoId}`
     );
 
     if (response.status === 200) {
-      //   console.log("Total status found:", response.data.totalStatus);
-      return response.data.totalStatus;
+      console.log("User info: ", response.data.userInfo);
+      return response.data.userInfo;
     }
   } catch (error) {
     console.log(error);
