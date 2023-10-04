@@ -24,6 +24,7 @@ import { daysBetweenDates } from "../../../src/lib/dates";
 import { getChallengeInfo } from "../../../src/api/challengeById";
 import PaybackInfoTable from "../../../src/PaybackInfoTable";
 import getPaybackInfo from "../../../src/api/paybackStatus";
+import getPaybackClaimInfo from "../../../src/api/paybackClaimInfo";
 
 const IndividualMyChallengeCompleted = () => {
   const [selectedMiddleBar, setSelctedMiddleBar] = useState("My");
@@ -306,6 +307,7 @@ const PaybackInfo = ({
         index={1}
         onClick={() => {
           setIsClaimed(true);
+          getPaybackClaimInfo(userChallengeId);
         }}
       >
         Claim Crypto

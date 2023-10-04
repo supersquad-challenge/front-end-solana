@@ -41,8 +41,3 @@ export const registerMyChallenge = async (
     console.log(error);
   }
 };
-
-// 사용 예
-const userInfoId = "65109cf6ab7e0f72cbe04fd9";
-const challengeId = "65109d34ab7e0f72cbe04fdc";
-registerMyChallenge(userInfoId, challengeId);
