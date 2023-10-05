@@ -3,13 +3,20 @@ import { useState } from "react";
 import { useRef } from "react";
 import { styled } from "styled-components";
 import { useRecoilState } from "recoil";
-import { isImageUploadedState } from "./lib/states";
+import {
+  isImageUploadedState,
+  registerUserChallengeIdState,
+} from "./lib/states";
+import postPhoto from "./api/postPhoto";
 
 const UploadedImage = () => {
   const inputRef = useRef<HTMLInputElement>(null);
 
   const [isImageUploaded, setIsImageUploaded] =
     useRecoilState(isImageUploadedState);
+  const [registerUserChallengeId, setRegisterUserChallengeId] = useRecoilState(
+    registerUserChallengeIdState
+  );
 
   const handleClick = () => {
     // input 엘리먼트가 클릭되었을 때 input 버튼을 클릭하기 위해 click() 메서드를 사용
@@ -28,13 +35,10 @@ const UploadedImage = () => {
       reader.onload = () => {
         setImageSrc(reader.result);
       };
-      // console.log(file);
       if (file !== undefined) {
         setIsImageUploaded(true);
+        postPhoto(registerUserChallengeId, file);
       }
-      // updateRegisterHomeUpLoadFile(file);
-      // updateRegisterHomeWholeInfo(file.name, 1);
-      // 주석
     }
   };
 
