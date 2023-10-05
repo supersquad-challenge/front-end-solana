@@ -122,7 +122,7 @@ const MyChallengesSubHeaderBarWrapper = styled.div<IsClickedProps>`
       //PC
     } */
   @media (max-width: 576px) {
-    //mobile
+    //mobile//
     font-size: 14px;
   }
   width: 33%;
