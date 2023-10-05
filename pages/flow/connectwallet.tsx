@@ -20,7 +20,6 @@ export default function ConnectWallet() {
     isPaidWithCrpytoState
   );
   const [userInfoId, setUserInfoId] = useRecoilState(userInfoIdState);
-  const router = useRouter();
   const [registerChallengeId, setRegisterChallengeId] = useRecoilState(
     registerChallengeIdState
   );

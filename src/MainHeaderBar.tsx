@@ -3,7 +3,8 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { colors } from "./lib/colors";
 import { useRecoilState } from "recoil";
-import { isSignedInState } from "./lib/states";
+import { isSignedInState, userInfoIdState } from "./lib/states";
+import logout from "./api/logout";
 
 const shouldShowLogoDBSIPath = ["/home/onApplication", "/home/ongoing"];
 
@@ -30,13 +31,15 @@ const MainHeaderBar = () => {
     router.pathname.startsWith(path)
   ); //bool
 
-   const [isMounted, setIsMounted] = useState<boolean>(false);
+  const [isMounted, setIsMounted] = useState<boolean>(false);
 
-    useEffect(() => {
-      if (typeof window !== 'undefined') { 
-        setIsMounted(true);
-      }
-    }, [])
+  const [userInfoId, setUserInfoId] = useRecoilState(userInfoIdState);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setIsMounted(true);
+    }
+  }, []);
 
   const shouldShowNaviBarName = Object.keys(
     shouldShowNaviBarNameDBSIPath
@@ -47,34 +50,35 @@ const MainHeaderBar = () => {
   const Logo_DifferBySignIn = () => {
     return (
       <>
-      {isMounted && (
-        <Container>
-        <SuperSquad>SuperSquad</SuperSquad>
-        {isSignedIn ? (
-          <>
-            <ProfileImage
-              src="/PageHeaderBar/profileEx.svg"
-              alt="profileEx"
-              onClick={() => {
-                setIsSignedIn(false);
-              }}
-            />
-            <NotificationButton
-              src="/PageHeaderBar/notification.svg"
-              alt="notification"
-            />
-          </>
-        ) : (
-          <SignInButton
-            onClick={() => {
-              router.push("/flow/signin");
-            }}
-          >
-            Sign In
-          </SignInButton>
+        {isMounted && (
+          <Container>
+            <SuperSquad>SuperSquad</SuperSquad>
+            {isSignedIn ? (
+              <>
+                <ProfileImage
+                  src="/PageHeaderBar/profileEx.svg"
+                  alt="profileEx"
+                  onClick={() => {
+                    setIsSignedIn(false);
+                    // logout(userInfoId);
+                  }}
+                />
+                <NotificationButton
+                  src="/PageHeaderBar/notification.svg"
+                  alt="notification"
+                />
+              </>
+            ) : (
+              <SignInButton
+                onClick={() => {
+                  router.push("/flow/signin");
+                }}
+              >
+                Sign In
+              </SignInButton>
+            )}
+          </Container>
         )}
-      </Container>
-      )}
       </>
     );
   };
@@ -83,58 +87,61 @@ const MainHeaderBar = () => {
   const Back_DifferBySignIn = () => {
     const [isMounted, setIsMounted] = useState<boolean>(false);
 
-      useEffect(() => {
-        if (typeof window !== 'undefined') { 
-          setIsMounted(true);
-        }
-      }, [])
+    useEffect(() => {
+      if (typeof window !== "undefined") {
+        setIsMounted(true);
+      }
+    }, []);
     return (
-      <>{isMounted && 
-        <Container>
-        <GoBackButton
-          src="/PageHeaderBar/chevron-left.svg"
-          alt="goBack"
-          onClick={() => {
-            router.push("/home"); //이건 나중에 수정하면 될 듯.
-          }}
-        />
-
-        {isSignedIn ? (
-          <>
-            <ProfileImage
-              src="/PageHeaderBar/profileEx.svg"
-              alt="profileEx"
+      <>
+        {isMounted && (
+          <Container>
+            <GoBackButton
+              src="/PageHeaderBar/chevron-left.svg"
+              alt="goBack"
               onClick={() => {
-                setIsSignedIn(false);
+                router.push("/home"); //이건 나중에 수정하면 될 듯.
               }}
             />
-            <NotificationButton
-              src="/PageHeaderBar/notification.svg"
-              alt="notification"
-            />
-          </>
-        ) : (
-          <SignInButton
-            onClick={() => {
-              router.push("/flow/signin");
-            }}
-          >
-            Sign In
-          </SignInButton>
+
+            {isSignedIn ? (
+              <>
+                <ProfileImage
+                  src="/PageHeaderBar/profileEx.svg"
+                  alt="profileEx"
+                  onClick={() => {
+                    setIsSignedIn(false);
+                    // logout(userInfoId);
+                  }}
+                />
+                <NotificationButton
+                  src="/PageHeaderBar/notification.svg"
+                  alt="notification"
+                />
+              </>
+            ) : (
+              <SignInButton
+                onClick={() => {
+                  router.push("/flow/signin");
+                }}
+              >
+                Sign In
+              </SignInButton>
+            )}
+          </Container>
         )}
-      </Container>}
       </>
-          );
+    );
   };
 
   const Back = () => {
-      const [isMounted, setIsMounted] = useState<boolean>(false);
+    const [isMounted, setIsMounted] = useState<boolean>(false);
 
-      useEffect(() => {
-        if (typeof window !== 'undefined') { 
-          setIsMounted(true);
-        }
-      }, [])
+    useEffect(() => {
+      if (typeof window !== "undefined") {
+        setIsMounted(true);
+      }
+    }, []);
     return (
       <>
         {isMounted && (
@@ -147,9 +154,7 @@ const MainHeaderBar = () => {
               }}
             />
           </Container>
-
-        )
-        }  
+        )}
       </>
     );
   };
@@ -170,6 +175,7 @@ const MainHeaderBar = () => {
               alt="profileEx"
               onClick={() => {
                 setIsSignedIn(false);
+                // logout(userInfoId);
               }}
             />
             <NotificationButton
