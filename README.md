@@ -20,7 +20,7 @@ SuperSquad is a Web3-based challenge platform that allows users to participate i
 ## Features
 
 - **Google Login**: Sign in easily using your Google account.
-- **XUMM Wallet Integration**: Seamlessly connect your XUMM wallet for XRP Ledger to participate in challenges.
+- **Solana Wallet Integration**: Seamlessly connect your Phantom, Torus wallet for Solana to participate in challenges.
 - **Challenge Information**: View detailed information about each challenge.
 - **USDT Deposit**: After confirming the challenge details, deposit USDT to join.
 - **Photo Verification**: Upload a photo for verification.
@@ -31,7 +31,7 @@ SuperSquad is a Web3-based challenge platform that allows users to participate i
 - Node.js
 - npm
 - MongoDB
-- Xumm Wallet
+- Phantom Wallet or Torus Wallet
 
 ## Technologies
 
@@ -46,7 +46,7 @@ The project is deployed on Vercel.
 ## Usage
 
 1. **Google Login**: Start by logging in using your Google account.
-2. **Select Challenge and Connect XUMM Wallet**: Choose a challenge you're interested in and connect your XUMM wallet.
+2. **Select Challenge and Connect Solana Wallet**: Choose a challenge you're interested in and connect your Solana wallet.
 3. **Deposit USDT**: Deposit up to 200 USDT to participate in the challenge.
 4. **Upload Photo for Verification**: Upload a photo for verification purposes.
 5. **Complete Challenge and Earn Rewards**: Complete the challenge and earn additional rewards based on yield boosting.
