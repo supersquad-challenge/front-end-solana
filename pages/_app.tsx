@@ -8,6 +8,7 @@ import { MainHeaderBarPlaceholder } from "../src/PlaceHolder";
 import { RecoilRoot } from "recoil";
 import NavigationBar from "../src/NavigationBar";
 import { useRouter } from "next/router";
+import { ContextProvider } from "../src/contexts/ContextProvider";
 
 const GlobalStyle = createGlobalStyle`
   body {
@@ -41,21 +42,25 @@ function App({ Component, pageProps }: AppProps) {
         <title>SuperSquad</title>
       </Head>
       <RecoilRoot>
-        <ThemeProvider theme={theme}>
-          {!dontShowPageHeaderBarPath.includes(pathname) && (
-            <>
-              <MainHeaderBar />
-              <MainHeaderBarPlaceholder />
-            </>
-          )}
+        <ContextProvider>
+          <ThemeProvider theme={theme}>
+            {!dontShowPageHeaderBarPath.includes(pathname) && (
+              <>
+                <MainHeaderBar />
+                <MainHeaderBarPlaceholder />
+              </>
+            )}
 
-          <Component {...pageProps} />
-          {/* <NavigationBar /> */}
-          {shouldShowNavigationBarPath.includes(pathname) && <NavigationBar />}
-          {shouldShowNavigationBarPathStartsWith.some((path) => {
-            return pathname.startsWith(path);
-          }) && <NavigationBar />}
-        </ThemeProvider>
+            <Component {...pageProps} />
+            {/* <NavigationBar /> */}
+            {shouldShowNavigationBarPath.includes(pathname) && (
+              <NavigationBar />
+            )}
+            {shouldShowNavigationBarPathStartsWith.some((path) => {
+              return pathname.startsWith(path);
+            }) && <NavigationBar />}
+          </ThemeProvider>
+        </ContextProvider>
       </RecoilRoot>
     </>
   );

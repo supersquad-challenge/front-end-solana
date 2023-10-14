@@ -5,8 +5,8 @@ const nextConfig = {
   env: {
     API_BASE_URL: process.env.API_BASE_URL,
     GOOGLE_LOGIN_URL: process.env.GOOGLE_LOGIN_URL,
-    XUMM_API_KEY: process.env.XUMM_API_KEY,
-    XUMM_API_SECRET: process.env.XUMM_API_SECRET,
+    REACT_APP_SOLANA_RPC_HOST: process.env.REACT_APP_SOLANA_RPC_HOST,
+    REACT_APP_NETWORK: process.env.REACT_APP_NETWORK,
   },
   async redirects() {
     return [
